@@ -8,199 +8,209 @@
 <meta name="apple-mobile-web-app-title" content="БОРТ" />
 <meta name="theme-color" content="#090A0C" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23090A0C'/%3E%3Crect x='14' y='14' width='36' height='36' rx='8' fill='none' stroke='%23D8F33B' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23D8F33B'/%3E%3C/svg%3E" />
-<title>БОРТ — Контроль техники, маршрутов и денег</title>
+<title>БОРТ — Управление техникой, сменами и ремонтами</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 <style>
 :root, [data-theme="dark"] {
-  --bg: #090A0C; --s1: #111317; --s2: #16191F; --s3: #1C2028;
-  --bd: rgba(255,255,255,0.075); --bd2: rgba(255,255,255,0.14);
-  --tx: #F2F4F7; --tx2: #B4BCC8; --mu: #767F8D; --mu2: #4C535F;
-  --ac: #D8F33B; --ac-tx: #0B0D0E; --ac-s: rgba(216,243,59,0.11);
-  --gr: #22C55E; --gr-s: rgba(34,197,94,0.12);
-  --yl: #EAB308; --yl-s: rgba(234,179,8,0.13);
-  --rd: #F05252; --rd-s: rgba(240,82,82,0.13);
-  --bl: #60A5FA; --bl-s: rgba(96,165,250,0.12);
-  --glass: rgba(17,19,23,0.82); --scrim: rgba(0,0,0,0.72);
-  --shadow: 0 12px 34px rgba(0,0,0,0.45);
+  --bg:#090A0C; --s1:#111317; --s2:#16191F; --s3:#1D212A;
+  --bd:rgba(255,255,255,.075); --bd2:rgba(255,255,255,.14);
+  --tx:#F2F4F7; --tx2:#B4BCC8; --mu:#7B8494; --mu2:#4C535F;
+  --ac:#D8F33B; --ac-tx:#0B0D0E; --ac-s:rgba(216,243,59,.11);
+  --gr:#22C55E; --gr-s:rgba(34,197,94,.12);
+  --yl:#EAB308; --yl-s:rgba(234,179,8,.13);
+  --rd:#F05252; --rd-s:rgba(240,82,82,.13);
+  --bl:#60A5FA; --bl-s:rgba(96,165,250,.12);
+  --glass:rgba(17,19,23,.86); --scrim:rgba(0,0,0,.74);
+  --shadow:0 14px 36px rgba(0,0,0,.48);
 }
 [data-theme="light"] {
-  --bg: #F3F4F6; --s1: #FFFFFF; --s2: #F8F9FB; --s3: #ECEFF3;
-  --bd: rgba(15,23,42,0.08); --bd2: rgba(15,23,42,0.16);
-  --tx: #0F172A; --tx2: #334155; --mu: #64748B; --mu2: #94A3B8;
-  --ac: #111317; --ac-tx: #D8F33B; --ac-s: rgba(17,19,23,0.07);
-  --gr: #15803D; --gr-s: rgba(21,128,61,0.1);
-  --yl: #B45309; --yl-s: rgba(180,83,9,0.11);
-  --rd: #DC2626; --rd-s: rgba(220,38,38,0.1);
-  --bl: #2563EB; --bl-s: rgba(37,99,235,0.1);
-  --glass: rgba(255,255,255,0.88); --scrim: rgba(15,23,42,0.45);
-  --shadow: 0 8px 24px rgba(15,23,42,0.08);
+  --bg:#F2F4F7; --s1:#FFFFFF; --s2:#F7F8FA; --s3:#E8ECF2;
+  --bd:rgba(15,23,42,.08); --bd2:rgba(15,23,42,.16);
+  --tx:#0F172A; --tx2:#334155; --mu:#64748B; --mu2:#94A3B8;
+  --ac:#111317; --ac-tx:#D8F33B; --ac-s:rgba(17,19,23,.07);
+  --gr:#15803D; --gr-s:rgba(21,128,61,.1);
+  --yl:#B45309; --yl-s:rgba(180,83,9,.11);
+  --rd:#DC2626; --rd-s:rgba(220,38,38,.1);
+  --bl:#2563EB; --bl-s:rgba(37,99,235,.1);
+  --glass:rgba(255,255,255,.9); --scrim:rgba(15,23,42,.45);
+  --shadow:0 8px 24px rgba(15,23,42,.08);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: var(--bg); color: var(--tx); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", sans-serif; font-size: 13.5px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
-.num { font-variant-numeric: tabular-nums; }
-.mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
-svg.ico { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-.app { display: grid; grid-template-columns: 224px minmax(0, 1fr); min-height: 100vh; }
-.side { background: var(--s1); border-right: 1px solid var(--bd); display: flex; flex-direction: column; padding: 16px 12px; position: sticky; top: 0; height: 100vh; }
-.logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; }
-.logo-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--ac); color: var(--ac-tx); display: grid; place-items: center; flex: none; }
-.logo-name { font-size: 17px; font-weight: 800; letter-spacing: 0.14em; line-height: 1; }
-.logo-sub { font-size: 10.5px; color: var(--mu); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gr); box-shadow: 0 0 8px var(--gr); }
-.nav { display: flex; flex-direction: column; gap: 2px; }
-.nav-sec { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--mu2); padding: 14px 10px 6px; }
-.nav button { height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--mu); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 10px; text-align: left; transition: all .14s; }
-.nav button:hover { color: var(--tx); background: var(--s2); }
-.nav button.on { color: var(--tx); background: var(--s2); border-color: var(--bd2); }
-.nav button.on svg.ico { color: var(--ac); }
-[data-theme="light"] .nav button.on svg.ico { color: var(--tx); }
-.nav .badge { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 6px; background: var(--s3); color: var(--tx2); }
-.nav .badge.rd { background: var(--rd-s); color: var(--rd); }
-.nav .badge.yl { background: var(--yl-s); color: var(--yl); }
-.side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--bd); }
-.diesel-box { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 9px; background: var(--s2); border: 1px solid var(--bd); }
-.diesel-box span { font-size: 11.5px; color: var(--mu); font-weight: 600; }
-.diesel-inp { width: 56px; height: 26px; border-radius: 6px; border: 1px solid var(--bd2); background: var(--s1); color: var(--tx); text-align: right; padding: 0 6px; font-size: 12.5px; font-weight: 700; font-family: inherit; }
-.diesel-inp:focus { outline: none; border-color: var(--ac); }
-.main { display: flex; flex-direction: column; min-width: 0; }
-.topbar { height: 54px; padding: 0 20px; border-bottom: 1px solid var(--bd); background: var(--s1); display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; z-index: 20; }
-.tb-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.tb-title { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
-.tb-date { font-size: 12px; color: var(--mu); padding: 3px 8px; border-radius: 6px; background: var(--s2); border: 1px solid var(--bd); }
-.tb-right { display: flex; align-items: center; gap: 8px; }
-.btn { height: 32px; padding: 0 11px; border-radius: 8px; border: 1px solid var(--bd2); background: var(--s2); color: var(--tx); font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all .14s; white-space: nowrap; }
-.btn:hover { background: var(--s3); border-color: rgba(255,255,255,.24); }
-.btn.ac { background: var(--ac); color: var(--ac-tx); border-color: var(--ac); font-weight: 700; }
-.btn.ac:hover { filter: brightness(1.06); }
-.btn.rd { background: var(--rd-s); color: var(--rd); border-color: rgba(240,82,82,.3); }
-.btn.lg { height: 38px; padding: 0 14px; font-size: 13px; }
-.content { padding: 16px 20px 32px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.kpis { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 10px; }
-.kpi { background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; padding: 13px 15px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; min-width: 0; }
-.kpi.hi { background: var(--ac); color: var(--ac-tx); border-color: transparent; }
-.kpi-l { font-size: 11.5px; font-weight: 600; color: var(--mu); display: flex; align-items: center; justify-content: space-between; gap: 6px; white-space: nowrap; }
-.kpi-l span.mono { font-size: 10px; opacity: .75; }
-.kpi.hi .kpi-l { color: rgba(11,13,14,0.72); }
-[data-theme="light"] .kpi.hi .kpi-l { color: rgba(216,243,59,0.78); }
-.kpi-v { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; white-space: nowrap; }
-.kpi-s { font-size: 11.5px; color: var(--mu); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.kpi.hi .kpi-s { color: rgba(11,13,14,0.8); font-weight: 600; }
-[data-theme="light"] .kpi.hi .kpi-s { color: rgba(255,255,255,0.78); }
-.split { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 12px; align-items: start; }
-.panel { background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
-.panel-h { padding: 12px 13px; border-bottom: 1px solid var(--bd); display: flex; flex-direction: column; gap: 8px; }
-.panel-ht { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.panel-ht h2 { font-size: 13.5px; font-weight: 700; white-space: nowrap; }
-.pills { display: flex; gap: 4px; flex-wrap: wrap; }
-.pill { height: 25px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--bd); background: var(--s2); color: var(--mu); font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 5px; transition: all .12s; }
-.pill:hover { color: var(--tx); }
-.pill.on { background: var(--tx); color: var(--bg); border-color: var(--tx); }
-.dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
-.dot.gr { background: var(--gr); } .dot.yl { background: var(--yl); } .dot.rd { background: var(--rd); }
-.fleet-list { display: flex; flex-direction: column; max-height: 760px; overflow-y: auto; }
-.f-item { flex: 0 0 auto; padding: 11px 13px; border-bottom: 1px solid var(--bd); cursor: pointer; transition: background .12s; display: flex; flex-direction: column; gap: 5px; position: relative; }
-.f-item:last-child { border-bottom: none; }
-.f-item:hover { background: var(--s2); }
-.f-item.active { background: var(--s2); }
-.f-item.active::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px; background: var(--ac); }
-[data-theme="light"] .f-item.active::before { background: var(--tx); }
-.fi-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.fi-name { font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fi-plate { font-size: 10.5px; color: var(--mu); background: var(--s3); padding: 1px 6px; border-radius: 4px; white-space: nowrap; flex: none; }
-.fi-sub { font-size: 11px; color: var(--mu); display: flex; justify-content: space-between; gap: 6px; }
-.fi-bot { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 11.5px; }
-.fi-metrics { color: var(--tx2); display: flex; gap: 8px; white-space: nowrap; }
-.fi-alert { font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-.fi-alert.rd { background: var(--rd-s); color: var(--rd); }
-.fi-alert.yl { background: var(--yl-s); color: var(--yl); }
-.stage { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.map-wrap { position: relative; height: 295px; border-radius: 12px; overflow: hidden; border: 1px solid var(--bd); background: #0C0F14; }
-#live-map { width: 100%; height: 100%; background: #0C0F14; z-index: 1; }
-.leaflet-container { background: #0C0F14 !important; font-family: inherit !important; }
-.leaflet-control-attribution { background: rgba(9,10,12,.72) !important; color: #525A66 !important; font-size: 9px !important; }
-.leaflet-control-attribution a { color: #6E7681 !important; }
-.map-hud { position: absolute; top: 10px; left: 10px; z-index: 400; pointer-events: auto; background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--bd2); border-radius: 10px; padding: 8px 12px; display: flex; align-items: center; gap: 12px; max-width: calc(100% - 20px); }
-.hud-kv { min-width: 0; }
-.hud-kv span { display: block; font-size: 9.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--mu); }
-.hud-kv b { font-size: 12px; font-weight: 700; white-space: nowrap; }
-.hud-sep { width: 1px; height: 22px; background: var(--bd2); flex: none; }
-.map-legend { position: absolute; bottom: 10px; left: 10px; z-index: 400; background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--bd); border-radius: 8px; padding: 5px 10px; display: flex; gap: 12px; font-size: 11px; color: var(--tx2); }
-.map-legend span { display: inline-flex; align-items: center; gap: 5px; }
-.bort-pin { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 3px 8px; border-radius: 6px; background: #111317; border: 1.5px solid #22C55E; color: #F2F4F7; font-size: 11px; font-weight: 700; box-shadow: 0 4px 14px rgba(0,0,0,.65); white-space: nowrap; transition: transform .15s; }
-.bort-pin.active { background: #D8F33B; color: #0B0D0E; border-color: #D8F33B; transform: scale(1.12); z-index: 999 !important; }
-.bort-pin.rd { border-color: #F05252; } .bort-pin.yl { border-color: #EAB308; }
-.passport { background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; overflow: hidden; }
-.pass-h { padding: 12px 16px; border-bottom: 1px solid var(--bd); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.pass-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pass-title h3 { font-size: 15.5px; font-weight: 700; letter-spacing: -.015em; }
-.status-chip { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-.status-chip.gr { background: var(--gr-s); color: var(--gr); }
-.status-chip.yl { background: var(--yl-s); color: var(--yl); }
-.status-chip.rd { background: var(--rd-s); color: var(--rd); }
-.pass-top-band { display: grid; grid-template-columns: 1.15fr 1fr; border-bottom: 1px solid var(--bd); }
-.pass-grid { display: grid; grid-template-columns: 1fr 1fr; }
-.pass-col { padding: 14px 16px; border-right: 1px solid var(--bd); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.pass-col:last-child { border-right: none; }
-.col-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--mu); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.cad-stage { background: radial-gradient(circle at 50% 60%, rgba(255,255,255,0.03), transparent 70%), var(--s2); border: 1px solid var(--bd); border-radius: 10px; padding: 12px 12px 10px; position: relative; }
-.cad-tags { display: flex; justify-content: space-between; font-size: 11px; color: var(--mu); margin-bottom: 4px; }
-.cad-svg { width: 100%; height: 92px; display: block; }
-.gauge-box { display: flex; flex-direction: column; gap: 6px; }
-.gauge-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; }
-.gauge-bar { height: 10px; border-radius: 4px; background: var(--s3); border: 1px solid var(--bd); position: relative; overflow: hidden; display: flex; }
-.gauge-fill { height: 100%; background: var(--tx); transition: width .3s; }
-.gauge-fill.low { background: var(--yl); }
-.gauge-loss { height: 100%; background: repeating-linear-gradient(-45deg, var(--rd), var(--rd) 3px, rgba(240,82,82,.35) 3px, rgba(240,82,82,.35) 6px); border-left: 1px solid #fff; }
-.gauge-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--mu2); }
-.m3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-.m3-box { background: var(--s2); border: 1px solid var(--bd); border-radius: 8px; padding: 8px 9px; }
-.m3-box span { display: block; font-size: 10.5px; color: var(--mu); }
-.m3-box b { font-size: 15px; font-weight: 700; display: block; margin-top: 2px; }
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: var(--s2); border: 1px solid var(--bd); padding: 3px; border-radius: 8px; }
-.seg button { height: 28px; border: none; border-radius: 6px; background: transparent; color: var(--mu); font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.seg button.on { background: var(--s3); color: var(--tx); box-shadow: inset 0 0 0 1px var(--bd2); }
-.shift-bar { height: 6px; border-radius: 3px; background: var(--s3); display: flex; overflow: hidden; gap: 2px; }
-.sb-w { background: var(--gr); } .sb-i { background: var(--yl); } .sb-d { background: var(--rd); }
-.f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.flbl { display: block; font-size: 10.5px; color: var(--mu); font-weight: 600; margin-bottom: 4px; }
-.inp, .sel { width: 100%; height: 34px; border-radius: 8px; border: 1px solid var(--bd2); background: var(--s2); color: var(--tx); padding: 0 9px; font-size: 12.5px; font-weight: 600; font-family: inherit; }
-.inp:focus, .sel:focus { outline: none; border-color: var(--ac); }
-.kv-row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid var(--bd); font-size: 12.5px; gap: 8px; }
-.kv-row:last-child { border-bottom: none; }
-.kv-row.tot { border-top: 1px solid var(--bd2); border-bottom: none; padding-top: 8px; margin-top: 2px; font-size: 14px; font-weight: 700; }
-.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.card { background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.card-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-.card-h h3 { font-size: 14.5px; font-weight: 700; }
-.rt-item { background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; padding: 15px 16px; cursor: pointer; transition: all .14s; display: flex; flex-direction: column; gap: 11px; }
-.rt-item:hover { border-color: var(--bd2); background: var(--s2); }
-.rt-rate { font-size: 13px; font-weight: 700; padding: 4px 9px; border-radius: 7px; background: var(--ac-s); color: var(--ac); border: 1px solid rgba(216,243,59,.25); white-space: nowrap; }
-[data-theme="light"] .rt-rate { background: var(--tx); color: #D8F33B; border-color: transparent; }
-.tbl { width: 100%; border-collapse: collapse; }
-.tbl th { font-size: 11px; font-weight: 600; color: var(--mu); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--bd); white-space: nowrap; }
-.tbl td { font-size: 12.5px; padding: 9px 10px; border-bottom: 1px solid var(--bd); white-space: nowrap; }
-.tbl tr:hover td { background: var(--s2); }
-.tbl th.r, .tbl td.r { text-align: right; }
-.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 600; opacity: 0; pointer-events: none; transition: opacity .18s; }
-.scrim.open { opacity: 1; pointer-events: auto; }
-.modal { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -46%) scale(.98); opacity: 0; pointer-events: none; width: 460px; max-width: calc(100vw - 24px); max-height: 88vh; overflow-y: auto; z-index: 610; background: var(--s1); border: 1px solid var(--bd2); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); transition: all .18s; }
-.modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-.tg-shell { max-width: 460px; margin: 0 auto; background: var(--s1); border: 1px solid var(--bd); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.tg-bub { background: var(--s2); border: 1px solid var(--bd); border-radius: 12px; padding: 13px; white-space: pre-wrap; font-size: 12.5px; line-height: 1.55; }
-.tg-q { margin-left: auto; background: var(--ac); color: var(--ac-tx); font-weight: 700; border-radius: 10px; padding: 7px 12px; font-size: 12px; }
-.mob-nav { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 500; background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-top: 1px solid var(--bd); padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)); grid-template-columns: repeat(5, 1fr); gap: 4px; }
-.mob-nav button { min-height: 46px; border: none; border-radius: 8px; background: transparent; color: var(--mu); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.mob-nav button.on { color: var(--ac); background: var(--ac-s); }
-[data-theme="light"] .mob-nav button.on { color: var(--tx); background: var(--s3); }
-.toast { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%) translateY(8px); background: var(--tx); color: var(--bg); padding: 9px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; z-index: 700; opacity: 0; pointer-events: none; transition: all .18s; box-shadow: var(--shadow); }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-@media (max-width: 1060px) {
-  .app { grid-template-columns: 1fr; } .side { display: none; } .mob-nav { display: grid; }
-  .content { padding: 12px 12px 86px; } .topbar { padding: 0 12px; }
-  .kpis { grid-template-columns: repeat(2, 1fr); } .split { grid-template-columns: 1fr; }
-  .fleet-list { max-height: 310px; } .pass-top-band, .pass-grid { grid-template-columns: 1fr; }
-  .pass-col { border-right: none; border-bottom: 1px solid var(--bd); } .pass-col:last-child { border-bottom: none; }
-  .grid2 { grid-template-columns: 1fr; } .map-wrap { height: 245px; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",sans-serif;font-size:13.5px;line-height:1.4;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+svg.ico{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.app{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100vh}
+.side{background:var(--s1);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:16px 12px;position:sticky;top:0;height:100vh;z-index:30}
+.logo{display:flex;align-items:center;gap:10px;padding:2px 8px 16px}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--ac);color:var(--ac-tx);display:grid;place-items:center;flex:none}
+.logo-name{font-size:17px;font-weight:800;letter-spacing:.14em;line-height:1}
+.logo-sub{font-size:10.5px;color:var(--mu);margin-top:3px;display:flex;align-items:center;gap:5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--gr);box-shadow:0 0 8px var(--gr)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-sec{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mu2);padding:12px 10px 5px}
+.nav button{height:36px;padding:0 10px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--mu);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;text-align:left;transition:all .14s}
+.nav button:hover{color:var(--tx);background:var(--s2)}
+.nav button.on{color:var(--tx);background:var(--s2);border-color:var(--bd2)}
+.nav button.on svg.ico{color:var(--ac)}
+[data-theme="light"] .nav button.on svg.ico{color:var(--tx)}
+.nav .badge{margin-left:auto;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:6px;background:var(--s3);color:var(--tx2)}
+.nav .badge.rd{background:var(--rd-s);color:var(--rd)}
+.nav .badge.yl{background:var(--yl-s);color:var(--yl)}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--bd)}
+.role-card{background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:9px 10px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:border-color .14s}
+.role-card:hover{border-color:var(--ac)}
+.role-card b{font-size:12.5px;display:block}
+.role-card small{font-size:10.5px;color:var(--mu)}
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{height:54px;padding:0 18px;border-bottom:1px solid var(--bd);background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:450}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0}
+.mob-brand{display:none;align-items:center;gap:7px}
+.tb-title{font-size:15px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:7px;flex:none}
+.btn{height:34px;padding:0 11px;border-radius:8px;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .14s;white-space:nowrap}
+.btn:hover{background:var(--s3)}
+.btn.ac{background:var(--ac);color:var(--ac-tx);border-color:var(--ac);font-weight:700}
+.btn.rd{background:var(--rd-s);color:var(--rd);border-color:rgba(240,82,82,.35)}
+.btn.gr{background:var(--gr-s);color:var(--gr);border-color:rgba(34,197,94,.35)}
+.btn.lg{height:44px;padding:0 16px;font-size:13.5px;border-radius:10px}
+.btn.sm{height:28px;padding:0 9px;font-size:11.5px;border-radius:7px}
+.content{padding:15px 18px 34px;display:flex;flex-direction:column;gap:13px;min-width:0}
+.ctrl-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.seg3{display:inline-flex;gap:3px;background:var(--s1);border:1px solid var(--bd);padding:3px;border-radius:9px}
+.seg3 button{height:28px;padding:0 10px;border:none;border-radius:6px;background:transparent;color:var(--mu);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.seg3 button.on{background:var(--s3);color:var(--tx);box-shadow:inset 0 0 0 1px var(--bd2)}
+.kpis{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:10px}
+.kpi{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-width:0}
+.kpi.hi{background:var(--ac);color:var(--ac-tx);border-color:transparent}
+.kpi-l{font-size:11px;font-weight:600;color:var(--mu);display:flex;align-items:center;justify-content:space-between;gap:6px;white-space:nowrap}
+.kpi.hi .kpi-l{color:rgba(11,13,14,.72)}
+[data-theme="light"] .kpi.hi .kpi-l{color:rgba(216,243,59,.8)}
+.kpi-v{font-size:25px;font-weight:700;letter-spacing:-.03em;line-height:1.08;white-space:nowrap}
+.kpi-s{font-size:11.5px;color:var(--mu);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.kpi.hi .kpi-s{color:rgba(11,13,14,.82);font-weight:600}
+[data-theme="light"] .kpi.hi .kpi-s{color:rgba(255,255,255,.78)}
+.split{display:grid;grid-template-columns:308px minmax(0,1fr);gap:12px;align-items:start}
+.panel{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.panel-h{padding:11px 13px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px}
+.panel-ht{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-ht h2{font-size:13.5px;font-weight:700;white-space:nowrap}
+.pills{display:flex;gap:4px;flex-wrap:wrap}
+.pill{height:26px;padding:0 8px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+.pill.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.dot{width:6px;height:6px;border-radius:50%;flex:none;display:inline-block}
+.dot.gr{background:var(--gr)} .dot.yl{background:var(--yl)} .dot.rd{background:var(--rd)} .dot.bl{background:var(--bl)}
+.fleet-list{display:flex;flex-direction:column;max-height:770px;overflow-y:auto}
+.f-item{flex:0 0 auto;padding:11px 13px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s;display:flex;flex-direction:column;gap:5px;position:relative}
+.f-item:last-child{border-bottom:none}
+.f-item:hover{background:var(--s2)}
+.f-item.active{background:var(--s2)}
+.f-item.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;background:var(--ac)}
+[data-theme="light"] .f-item.active::before{background:var(--tx)}
+.fi-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.fi-name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fi-plate{font-size:10.5px;color:var(--mu);background:var(--s3);padding:1px 6px;border-radius:4px;white-space:nowrap;flex:none}
+.fi-sub{font-size:11px;color:var(--mu);display:flex;justify-content:space-between;gap:6px}
+.fi-bot{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11.5px}
+.fi-metrics{color:var(--tx2);display:flex;gap:8px;white-space:nowrap}
+.fi-alert{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.fi-alert.rd{background:var(--rd-s);color:var(--rd)} .fi-alert.yl{background:var(--yl-s);color:var(--yl)} .fi-alert.bl{background:var(--bl-s);color:var(--bl)}
+.stage{display:flex;flex-direction:column;gap:12px;min-width:0}
+.map-wrap{position:relative;height:285px;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:#0C0F14;z-index:1}
+#live-map{width:100%;height:100%;background:#0C0F14;z-index:1}
+.leaflet-container{background:#0C0F14 !important;font-family:inherit !important;z-index:1 !important}
+.leaflet-pane,.leaflet-top,.leaflet-bottom{z-index:5 !important}
+.leaflet-control-attribution{background:rgba(9,10,12,.72) !important;color:#525A66 !important;font-size:9px !important}
+.map-hud{position:absolute;top:10px;left:10px;right:10px;z-index:20;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd2);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:fit-content;max-width:calc(100% - 20px)}
+.hud-kv{min-width:0}
+.hud-kv span{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu)}
+.hud-kv b{font-size:12px;font-weight:700;white-space:nowrap}
+.hud-sep{width:1px;height:22px;background:var(--bd2);flex:none}
+.map-legend{position:absolute;bottom:10px;left:10px;z-index:20;background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:8px;padding:5px 9px;display:flex;gap:10px;font-size:11px;color:var(--tx2)}
+.map-legend span{display:inline-flex;align-items:center;gap:4px}
+.bort-pin{display:flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:6px;background:#111317;border:1.5px solid #22C55E;color:#F2F4F7;font-size:11px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.65);white-space:nowrap}
+.bort-pin.active{background:#D8F33B;color:#0B0D0E;border-color:#D8F33B;transform:scale(1.12)}
+.bort-pin.rd{border-color:#F05252} .bort-pin.yl{border-color:#EAB308}
+.passport{background:var(--s1);border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.pass-h{padding:12px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pass-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pass-title h3{font-size:15.5px;font-weight:700}
+.status-chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.status-chip.gr{background:var(--gr-s);color:var(--gr)} .status-chip.yl{background:var(--yl-s);color:var(--yl)} .status-chip.rd{background:var(--rd-s);color:var(--rd)} .status-chip.bl{background:var(--bl-s);color:var(--bl)}
+.pass-top-band{display:grid;grid-template-columns:1.15fr 1fr;border-bottom:1px solid var(--bd)}
+.pass-grid{display:grid;grid-template-columns:1fr 1fr}
+.pass-col{padding:14px 16px;border-right:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;min-width:0}
+.pass-col:last-child{border-right:none}
+.col-lbl{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cad-stage{background:radial-gradient(circle at 50% 60%,rgba(255,255,255,.03),transparent 70%),var(--s2);border:1px solid var(--bd);border-radius:10px;padding:11px 12px 9px}
+.cad-tags{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-bottom:4px}
+.cad-svg{width:100%;height:90px;display:block}
+.gauge-box{display:flex;flex-direction:column;gap:6px}
+.gauge-top{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;gap:6px}
+.gauge-bar{height:10px;border-radius:4px;background:var(--s3);border:1px solid var(--bd);overflow:hidden;display:flex}
+.gauge-fill{height:100%;background:var(--tx)} .gauge-fill.low{background:var(--yl)}
+.gauge-loss{height:100%;background:repeating-linear-gradient(-45deg,var(--rd),var(--rd) 3px,rgba(240,82,82,.35) 3px,rgba(240,82,82,.35) 6px);border-left:1px solid #fff}
+.gauge-ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--mu2)}
+.m3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.m3-box{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 9px}
+.m3-box span{display:block;font-size:10.5px;color:var(--mu)}
+.m3-box b{font-size:15px;font-weight:700;display:block;margin-top:2px;white-space:nowrap}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--s2);border:1px solid var(--bd);padding:3px;border-radius:8px}
+.seg button{height:28px;border:none;border-radius:6px;background:transparent;color:var(--mu);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.seg button.on{background:var(--s3);color:var(--tx);box-shadow:inset 0 0 0 1px var(--bd2)}
+.shift-bar{height:7px;border-radius:3px;background:var(--s3);display:flex;overflow:hidden;gap:2px}
+.sb-w{background:var(--gr)} .sb-i{background:var(--yl)} .sb-d{background:var(--rd)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.flbl{display:block;font-size:10.5px;color:var(--mu);font-weight:600;margin-bottom:4px}
+.inp,.sel{width:100%;height:36px;border-radius:8px;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);padding:0 10px;font-size:13px;font-weight:600;font-family:inherit}
+.inp:focus,.sel:focus{outline:none;border-color:var(--ac)}
+.kv-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--bd);font-size:12.5px;gap:8px}
+.kv-row:last-child{border-bottom:none}
+.kv-row.tot{border-top:1px solid var(--bd2);border-bottom:none;padding-top:8px;margin-top:2px;font-size:14px;font-weight:700}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:11px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-h h3{font-size:14.5px;font-weight:700}
+.rt-item{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px 15px;cursor:pointer;transition:all .14s;display:flex;flex-direction:column;gap:10px}
+.rt-item:hover{border-color:var(--bd2);background:var(--s2)}
+.rt-rate{font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:7px;background:var(--ac-s);color:var(--ac);border:1px solid rgba(216,243,59,.25);white-space:nowrap}
+[data-theme="light"] .rt-rate{background:var(--tx);color:#D8F33B;border-color:transparent}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:11px;font-weight:600;color:var(--mu);text-align:left;padding:8px 9px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.tbl td{font-size:12.5px;padding:9px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.tbl tr:hover td{background:var(--s2)}
+.tbl th.r,.tbl td.r{text-align:right}
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.cap-btn{min-height:78px;border-radius:12px;border:1px solid var(--bd2);background:var(--s2);color:var(--tx);padding:11px 10px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:8px;text-align:left;transition:all .14s}
+.cap-btn:hover{border-color:var(--ac);background:var(--s3)}
+.cap-btn.hi{background:var(--ac);color:var(--ac-tx);border-color:transparent}
+.cap-btn b{font-size:13px;line-height:1.2}
+.cap-btn span{font-size:11px;opacity:.75}
+.feed-item{background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:11px 13px;display:flex;gap:11px;align-items:flex-start}
+.feed-thumb{width:56px;height:56px;border-radius:8px;object-fit:cover;background:var(--s3);border:1px solid var(--bd2);flex:none;display:grid;place-items:center;font-size:11px;color:var(--mu);font-weight:700}
+.mech-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px 15px;display:flex;flex-direction:column;gap:11px}
+.mech-card.red{border-color:rgba(240,82,82,.45)} .mech-card.yel{border-color:rgba(234,179,8,.4)}
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:600;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.open{opacity:1;pointer-events:auto}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;width:480px;max-width:calc(100vw - 20px);max-height:88vh;overflow-y:auto;z-index:610;background:var(--s1);border:1px solid var(--bd2);border-radius:16px;padding:18px;box-shadow:var(--shadow);transition:all .18s}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.mob-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:500;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--bd);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));grid-template-columns:repeat(5,1fr);gap:3px}
+.mob-nav button{min-height:48px;border:none;border-radius:9px;background:transparent;color:var(--mu);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
+.mob-nav button.on{color:var(--ac);background:var(--ac-s)}
+[data-theme="light"] .mob-nav button.on{color:var(--tx);background:var(--s3)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(8px);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:9px;font-size:12.5px;font-weight:700;z-index:700;opacity:0;pointer-events:none;transition:all .18s;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width: 1020px) {
+  .app{grid-template-columns:1fr} .side{display:none} .mob-nav{display:grid} .mob-brand{display:flex} .desk-only{display:none !important}
+  .topbar{height:52px;padding:0 12px} .tb-title{display:none} .content{padding:11px 12px 90px;gap:11px}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:8px} .kpi{padding:11px 12px} .kpi-v{font-size:21px}
+  .split{grid-template-columns:1fr} .fleet-list{max-height:none} .stage.mob-hidden{display:none}
+  .pass-top-band,.pass-grid,.grid2{grid-template-columns:1fr}
+  .pass-col{border-right:none;border-bottom:1px solid var(--bd);padding:12px 13px} .pass-col:last-child{border-bottom:none}
+  .map-wrap{height:230px} .map-hud{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;width:calc(100% - 20px);padding:7px 10px} .hud-sep{display:none}
+  .cap-grid{grid-template-columns:1fr} .cap-btn{min-height:56px;flex-direction:row;align-items:center}
+  .modal{top:auto;bottom:0;left:0;right:0;width:100%;max-width:100%;transform:translateY(100%);border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+  .modal.open{transform:translateY(0)}
 }
 </style>
 </head>
@@ -209,402 +219,378 @@ svg.ico { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.75; f
   <aside class="side">
     <div class="logo">
       <div class="logo-mark"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/></svg></div>
-      <div><div class="logo-name">БОРТ</div><div class="logo-sub"><span class="live-dot"></span>Gelios · онлайн</div></div>
+      <div><div class="logo-name">БОРТ</div><div class="logo-sub"><span class="live-dot"></span>Gelios · РФ без VPN</div></div>
     </div>
-    <div class="nav">
-      <div class="nav-sec">Операции</div>
-      <button class="on" id="sn-home" onclick="go('home')"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Пульт <span class="badge rd" id="b-prob">4</span></button>
-      <button id="sn-routes" onclick="go('routes')"><svg class="ico" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h5a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h5"/></svg>Маршруты <span class="badge" id="b-rt">3</span></button>
-      <button id="sn-to" onclick="go('to')"><svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>ТО и ремонт <span class="badge yl" id="b-to">2</span></button>
-      <div class="nav-sec" id="sec-fin">Финансы</div>
-      <button id="sn-fin" onclick="go('fin')"><svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-6"/></svg>Экономика</button>
-      <button id="sn-tg" onclick="go('tg')"><svg class="ico" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>Сводка 07:00</button>
-    </div>
+    <div class="nav" id="side-nav"></div>
     <div class="side-foot">
-      <div class="seg" style="margin-bottom:2px"><button class="on" id="rm-boss" onclick="setRole(false)">Руководитель</button><button id="rm-mech" onclick="setRole(true)">Механик</button></div>
-      <div class="diesel-box" id="diesel-wrap"><span>Дизель, ₽/л</span><input type="number" class="diesel-inp num" id="side-diesel" value="70" onchange="setDiesel(this.value)" /></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><button class="btn" onclick="toggleTheme()" id="th-btn">Светлая</button><button class="btn" onclick="openCloudModal()">Облако</button></div>
+      <div class="role-card" onclick="openRoleModal()"><div><small>Текущий кабинет</small><b id="side-role-name">Руководитель</b></div><span class="fi-plate mono" id="side-role-pin">PIN</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><button class="btn" onclick="toggleTheme()" id="th-btn">Светлая</button><button class="btn" onclick="openSettingsModal()">Настройки</button></div>
     </div>
   </aside>
   <div class="main">
     <header class="topbar">
-      <div class="tb-left"><span class="tb-title" id="page-title">Командный пульт</span><span class="tb-date num">25 нояб. · сутки</span></div>
-      <div class="tb-right">
-        <button class="btn" onclick="openCloudModal()">Облако / Excel</button>
-        <button class="btn" onclick="openAddMaint()">+ ТО / ремонт</button>
-        <button class="btn ac" onclick="go('routes');addNewRoute()">+ Маршрут</button>
-        <button class="btn" onclick="resetDemo()" title="Сбросить правки к демо">Сброс</button>
+      <div class="tb-left">
+        <div class="mob-brand" onclick="openRoleModal()" style="cursor:pointer">
+          <div class="logo-mark" style="width:28px;height:28px;border-radius:7px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none"/></svg></div>
+          <div><div style="font-size:14px;font-weight:800;letter-spacing:.1em;line-height:1">БОРТ</div><div style="font-size:10.5px;color:var(--ac);font-weight:700" id="mob-role-lbl">Директор ▾</div></div>
+        </div>
+        <span class="tb-title" id="page-title">Пульт руководителя</span>
       </div>
+      <div class="tb-right" id="tb-actions"></div>
     </header>
     <div class="content" id="root"></div>
   </div>
 </div>
-<nav class="mob-nav">
-  <button class="on" id="mn-home" onclick="go('home')"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Пульт</button>
-  <button id="mn-routes" onclick="go('routes')"><svg class="ico" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h5a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h5"/></svg>Маршруты</button>
-  <button id="mn-to" onclick="go('to')"><svg class="ico" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>ТО</button>
-  <button id="mn-fin" onclick="go('fin')"><svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-6"/></svg>Деньги</button>
-  <button id="mn-tg" onclick="go('tg')"><svg class="ico" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>07:00</button>
-</nav>
+<nav class="mob-nav" id="mob-nav"></nav>
 <div class="scrim" id="scrim" onclick="closeModal()"></div>
 <div class="modal" id="modal"></div>
 <div class="toast" id="toast"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
-const STORAGE_KEY = 'bort_v8_state_v1';
+const STORAGE_KEY = 'bort_v9_state_v1';
+const ROLES = {
+  boss: { name:'Руководитель', short:'Директор', pin:'1111', desc:'Полный доступ: деньги, прибыль, сливы, тарифы, все борта' },
+  disp: { name:'Начальник штаба', short:'Штаб', pin:'2222', desc:'Разнарядка, смены День/Ночь, маршруты, весы (без прибыли и тарифов)' },
+  mech: { name:'Старший механик', short:'Механик', pin:'3333', desc:'Ремзона, ТО по км и м/ч, фото поломок/одометра (НОЛЬ денег и тарифов)' }
+};
 const DEFAULT_STATE = {
-  diesel: 70,
+  role: 'boss', period: 'day', shift: 'all', notifyChannel: 'bort', diesel: 70,
+  drivers: [
+    { name:'Ковалёв Д.', phone:'+7 923 410-11-01', state:'busy' }, { name:'Егоров П.', phone:'+7 923 410-11-02', state:'busy' },
+    { name:'Сафонов И.', phone:'+7 923 410-11-03', state:'busy' }, { name:'Мухин С.', phone:'+7 923 410-11-04', state:'busy' },
+    { name:'Лебедев П.', phone:'+7 923 410-11-05', state:'busy' }, { name:'Орлов К.', phone:'+7 923 410-11-06', state:'busy' },
+    { name:'Зайцев Р.', phone:'+7 923 410-11-07', state:'busy' }, { name:'Шубин А.', phone:'+7 923 410-11-08', state:'busy' },
+    { name:'Белов М.', phone:'+7 923 410-11-09', state:'busy' }, { name:'Волков В.', phone:'+7 923 410-11-10', state:'free' },
+    { name:'Титов Е.', phone:'+7 923 410-11-11', state:'free' }, { name:'Морозов А.', phone:'+7 923 410-11-12', state:'off' }
+  ],
   routes: [
-    { id:'r1', name:'Разрез «Северный» → Обогатительная', mode:'ton', rate:185, legKm:16, path:[[54.48,86.18],[54.52,86.26],[54.56,86.34]] },
-    { id:'r2', name:'Карьер «Восточный» → Ж/Д тупик', mode:'ton', rate:235, legKm:24, path:[[54.42,86.38],[54.46,86.49],[54.50,86.60]] },
-    { id:'r3', name:'Участок «Южный» → Отвал №3', mode:'trip', rate:3900, legKm:9, path:[[54.36,86.22],[54.39,86.29],[54.41,86.35]] }
+    { id:'r1', name:'Разрез «Северный» → Обогатительная', mode:'ton', rate:185, legKm:16, planCars:3, path:[[54.48,86.18],[54.52,86.26],[54.56,86.34]] },
+    { id:'r2', name:'Карьер «Восточный» → Ж/Д тупик', mode:'ton', rate:235, legKm:24, planCars:3, path:[[54.42,86.38],[54.46,86.49],[54.50,86.60]] },
+    { id:'r3', name:'Участок «Южный» → Отвал №3', mode:'trip', rate:3900, legKm:9, planCars:2, path:[[54.36,86.22],[54.39,86.29],[54.41,86.35]] }
   ],
   machines: [
-    { id:'17', name:'SHACMAN X3000 №17', plate:'С 774 КО 42', driver:'Шубин А.', routeId:'r1', capTon:25, tonMode:'auto', manualTons:125, trips:5, dayKm:80, odoKm:148420, nextToKm:160000, workH:2.5, idleH:1.0, downH:8.5, tankCap:500, tankNow:95, burnedL:115, slivL:85, wage:2400, fix:18000, level:'rd', status:'Слив −85 л · рессора', speed:0, note:'03:14 — резкое падение уровня ДТ на 85 л (−5 950 ₽) на стоянке промзоны. Утром замена задней рессоры на рембазе.', lat:54.455, lng:86.22 },
-    { id:'04', name:'HOWO TX 8×4 №04', plate:'А 219 МТ 42', driver:'Белов М.', routeId:'r2', capTon:22, tonMode:'auto', manualTons:0, trips:0, dayKm:0, odoKm:192800, nextToKm:205000, workH:0, idleH:0, downH:12.0, tankCap:400, tankNow:210, burnedL:0, slivL:0, wage:0, fix:16500, level:'rd', status:'Рембаза · турбина', speed:0, note:'Замена турбины Holset и прокладок. Плановый выход на линию — завтра в 07:00.', lat:54.448, lng:86.235 },
-    { id:'06', name:'HOWO TX 8×4 №06', plate:'Х 418 ТМ 142', driver:'Мухин С.', routeId:'r2', capTon:22, tonMode:'auto', manualTons:352, trips:16, dayKm:384, odoKm:164200, nextToKm:165000, workH:7.4, idleH:3.8, downH:0.8, tankCap:400, tankNow:165, burnedL:390, slivL:0, wage:7200, fix:16500, level:'yl', status:'Холостой 3,8 ч · ТО 800 км', speed:34, note:'3,8 ч работал на холостом ходу в очереди на погрузке (~46 л впустую). До планового ТО осталось 800 км.', lat:54.465, lng:86.485 },
-    { id:'14', name:'HOWO TX 8×4 №14', plate:'Т 902 АС 42', driver:'Зайцев Р.', routeId:'r3', capTon:22, tonMode:'auto', manualTons:396, trips:18, dayKm:162, odoKm:178400, nextToKm:177500, workH:7.8, idleH:3.2, downH:1.0, tankCap:400, tankNow:140, burnedL:265, slivL:0, wage:7100, fix:16500, level:'yl', status:'Просрочка ТО +900 км', speed:28, note:'Превышен интервал ТО на 900 км (план был на 177 500 км). 3,2 ч холостого хода у отвала.', lat:54.395, lng:86.305 },
-    { id:'01', name:'SHACMAN X3000 №01', plate:'Е 805 РН 142', driver:'Ковалёв Д.', routeId:'r1', capTon:25, tonMode:'auto', manualTons:575, trips:23, dayKm:368, odoKm:134620, nextToKm:149000, workH:10.4, idleH:1.1, downH:0.5, tankCap:500, tankNow:340, burnedL:352, slivL:0, wage:9600, fix:18000, level:'gr', status:'На линии', speed:48, note:'Смена без отклонений. 23 рейса по геозонам, расход в норме.', lat:54.525, lng:86.275 },
-    { id:'02', name:'SITRAK C7H №02', plate:'К 412 ЕТ 42', driver:'Сафонов И.', routeId:'r1', capTon:28, tonMode:'manual', manualTons:602, trips:21, dayKm:336, odoKm:91450, nextToKm:92500, workH:10.1, idleH:1.3, downH:0.6, tankCap:550, tankNow:310, burnedL:348, slivL:0, wage:9800, fix:19500, level:'gr', status:'На линии · весовая', speed:44, note:'Тоннаж подтверждён по весовой (602 т за 21 рейс). Через 1 050 км плановое ТО.', lat:54.552, lng:86.33 },
-    { id:'09', name:'SHACMAN X3000 №09', plate:'М 609 КВ 154', driver:'Лебедев П.', routeId:'r2', capTon:25, tonMode:'auto', manualTons:475, trips:19, dayKm:456, odoKm:118900, nextToKm:130000, workH:10.0, idleH:1.4, downH:0.6, tankCap:500, tankNow:280, burnedL:385, slivL:0, wage:9200, fix:18000, level:'gr', status:'На линии', speed:52, note:'Ровная смена на длинном плече (24 км), нарушений нет.', lat:54.496, lng:86.575 },
-    { id:'11', name:'SITRAK C7H №11', plate:'В 312 КХ 154', driver:'Орлов К.', routeId:'r3', capTon:27, tonMode:'auto', manualTons:702, trips:26, dayKm:234, odoKm:82310, nextToKm:95000, workH:10.6, idleH:0.9, downH:0.5, tankCap:550, tankNow:390, burnedL:295, slivL:0, wage:9400, fix:19500, level:'gr', status:'На линии', speed:39, note:'Максимальная выработка на коротком плече: 26 рейсов за смену.', lat:54.372, lng:86.245 }
+    { id:'17', name:'SHACMAN X3000 №17', kind:'dump', plate:'С 774 КО 42', drvDay:'Шубин А.', drvNight:'Титов Е.', routeId:'r1', capTon:25, tonMode:'auto', manualTons:125, trips:5, gpsTrips:5, scaleTrips:5, dayKm:80, odoKm:148420, nextToKm:160000, mh:4120, nextToMh:4250, workH:2.5, idleH:1.0, downH:8.5, tankCap:500, tankNow:95, burnedL:115, slivL:85, slivShift:'night', slivInfo:'03:14 · промзона · ночная смена (Титов Е.)', slivStatus:'open', wage:2400, fix:18000, techState:'repair', partWait:'Стремянки и лист рессоры в наличии', level:'rd', status:'Слив −85 л · Ремзона', speed:0, lat:54.458, lng:86.205, monthProfit:482000 },
+    { id:'04', name:'HOWO TX 8×4 №04', kind:'dump', plate:'А 219 МТ 42', drvDay:'Белов М.', drvNight:'Волков В.', routeId:'r2', capTon:22, tonMode:'auto', manualTons:0, trips:0, gpsTrips:0, scaleTrips:0, dayKm:0, odoKm:192800, nextToKm:205000, mh:5610, nextToMh:5900, workH:0, idleH:0, downH:12.0, tankCap:400, tankNow:210, burnedL:0, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:0, fix:16500, techState:'parts', partWait:'Ждём турбину Holset · доставка завтра 10:00', level:'rd', status:'Рембаза · ждёт турбину', speed:0, lat:54.442, lng:86.245, monthProfit:315000 },
+    { id:'06', name:'HOWO TX 8×4 №06', kind:'dump', plate:'Х 418 ТМ 142', drvDay:'Мухин С.', drvNight:'Егоров П.', routeId:'r2', capTon:22, tonMode:'auto', manualTons:352, trips:16, gpsTrips:16, scaleTrips:15, dayKm:384, odoKm:164200, nextToKm:165000, mh:4870, nextToMh:4900, workH:7.4, idleH:3.8, downH:0.8, tankCap:400, tankNow:165, burnedL:390, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:7200, fix:16500, techState:'ok', partWait:'', level:'yl', status:'Холостой 3,8 ч · ТО 30 м/ч', speed:34, lat:54.465, lng:86.485, monthProfit:618000 },
+    { id:'14', name:'HOWO TX 8×4 №14', kind:'dump', plate:'Т 902 АС 42', drvDay:'Зайцев Р.', drvNight:'Волков В.', routeId:'r3', capTon:22, tonMode:'auto', manualTons:396, trips:18, gpsTrips:18, scaleTrips:18, dayKm:162, odoKm:178400, nextToKm:177500, mh:5245, nextToMh:5200, workH:7.8, idleH:3.2, downH:1.0, tankCap:400, tankNow:140, burnedL:265, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:7100, fix:16500, techState:'ok', partWait:'', level:'yl', status:'Просрочка ТО (+45 м/ч)', speed:28, lat:54.395, lng:86.305, monthProfit:544000 },
+    { id:'01', name:'SHACMAN X3000 №01', kind:'dump', plate:'Е 805 РН 142', drvDay:'Ковалёв Д.', drvNight:'Егоров П.', routeId:'r1', capTon:25, tonMode:'auto', manualTons:575, trips:23, gpsTrips:23, scaleTrips:23, dayKm:368, odoKm:134620, nextToKm:149000, mh:3610, nextToMh:3900, workH:10.4, idleH:1.1, downH:0.5, tankCap:500, tankNow:340, burnedL:352, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:9600, fix:18000, techState:'ok', partWait:'', level:'gr', status:'На линии', speed:48, lat:54.525, lng:86.275, monthProfit:985000 },
+    { id:'02', name:'SITRAK C7H №02', kind:'dump', plate:'К 412 ЕТ 42', drvDay:'Сафонов И.', drvNight:'Титов Е.', routeId:'r1', capTon:28, tonMode:'manual', manualTons:602, trips:21, gpsTrips:21, scaleTrips:19, dayKm:336, odoKm:91450, nextToKm:92500, mh:2490, nextToMh:2550, workH:10.1, idleH:1.3, downH:0.6, tankCap:550, tankNow:310, burnedL:348, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:9800, fix:19500, techState:'ok', partWait:'', level:'gr', status:'На линии · весы', speed:44, lat:54.552, lng:86.33, monthProfit:1090000 },
+    { id:'09', name:'SHACMAN X3000 №09', kind:'dump', plate:'М 609 КВ 154', drvDay:'Лебедев П.', drvNight:'Волков В.', routeId:'r2', capTon:25, tonMode:'auto', manualTons:475, trips:19, gpsTrips:19, scaleTrips:19, dayKm:456, odoKm:118900, nextToKm:130000, mh:3120, nextToMh:3400, workH:10.0, idleH:1.4, downH:0.6, tankCap:500, tankNow:280, burnedL:385, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:9200, fix:18000, techState:'ok', partWait:'', level:'gr', status:'На линии', speed:52, lat:54.496, lng:86.575, monthProfit:960000 },
+    { id:'Э1', name:'CAT 320 Экскаватор', kind:'exc', plate:'ТМ 4412 42', drvDay:'Орлов К.', drvNight:'Морозов А.', routeId:'r1', capTon:0, tonMode:'auto', manualTons:0, trips:0, gpsTrips:0, scaleTrips:0, dayKm:0, odoKm:0, nextToKm:0, mh:6410, nextToMh:6500, workH:10.5, idleH:1.5, downH:0, tankCap:410, tankNow:290, burnedL:215, slivL:0, slivShift:'', slivInfo:'', slivStatus:'', wage:8500, fix:14000, hourRate:4600, techState:'ok', partWait:'', level:'gr', status:'Погрузка · 10,5 м/ч', speed:0, lat:54.485, lng:86.19, monthProfit:710000 }
   ],
   maint: [
-    { id:'m1', date:'2026-11-25', machineId:'17', odoKm:148420, type:'rep', work:'Замена рессоры (правая задняя) + стремянки', cost:42000, today:true },
-    { id:'m2', date:'2026-11-25', machineId:'04', odoKm:192800, type:'rep', work:'Замена турбины Holset + прокладки', cost:118000, today:true },
-    { id:'m3', date:'2026-11-22', machineId:'01', odoKm:134100, type:'to', work:'ТО-2: масло ДВС, фильтры, шприцовка', cost:36500, today:false },
-    { id:'m4', date:'2026-11-19', machineId:'09', odoKm:115000, type:'to', work:'ТО-2: замена масла, ревизия тормозов', cost:34000, today:false },
-    { id:'m5', date:'2026-11-16', machineId:'06', odoKm:161900, type:'rep', work:'Замена энергоаккумулятора и ремня генератора', cost:19500, today:false },
-    { id:'m6', date:'2026-11-12', machineId:'11', odoKm:80000, type:'to', work:'ТО-1: плановое обслуживание', cost:28000, today:false }
+    { id:'m1', date:'2026-11-25', machineId:'17', odoKm:148420, mh:4120, type:'rep', work:'Замена рессоры (правая задняя) + стремянки', cost:42000, today:true, author:'Механик Семёнов', photo:'чек_рессора.jpg' },
+    { id:'m2', date:'2026-11-25', machineId:'04', odoKm:192800, mh:5610, type:'rep', work:'Снята турбина Holset · ждём новую от снабженца', cost:118000, today:true, author:'Механик Семёнов', photo:'турбина_трещина.jpg' },
+    { id:'m3', date:'2026-11-22', machineId:'01', odoKm:134100, mh:3590, type:'to', work:'ТО-1 ДВС: масло, фильтры, шприцовка 8×4', cost:36500, today:false, author:'Механик Семёнов', photo:'то1_борт01.jpg' },
+    { id:'m4', date:'2026-11-19', machineId:'09', odoKm:115000, mh:3040, type:'to', work:'ТО-2: масло, проверка тормозов и колодок', cost:34000, today:false, author:'Механик Семёнов', photo:'' }
+  ],
+  feed: [
+    { id:'f1', time:'09:18', who:'Сафонов И. (№02)', tag:'Весовая', text:'Фото талона с весовой · распознано 28,6 т (рейс №12 подтверждён)', badge:'gr', img:'' },
+    { id:'f2', time:'08:05', who:'Механик Семёнов', tag:'Ремзона', text:'Борт №17 загнан на яму: лопнул коренной лист правой рессоры. Борт заблокирован в разнарядке.', badge:'rd', img:'' },
+    { id:'f3', time:'06:52', who:'Ковалёв Д. (№01)', tag:'Заступил', text:'Фото щитка приборов · пробег 134 620 км, 3 610 м/ч. Вышел на «Северный».', badge:'bl', img:'' },
+    { id:'f4', time:'03:14', who:'Датчик Gelios', tag:'Слив ДТ', text:'SHACMAN №17 · падение уровня на 85 л за 4 мин (промзона, ночная смена Титов Е.).', badge:'rd', img:'' }
   ]
 };
 function loadState() { try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch (e) {} return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
 let STATE = loadState();
 function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); } catch (e) {} }
-function resetDemo() { STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); saveState(); SEL_ID = STATE.machines[0].id; ROUTE_FILT = 'all'; LIGHT_FILT = 'all'; OPEN_ROUTE_ID = null; toast('Демо-данные восстановлены'); render(); }
-let TAB = 'home', SEL_ID = STATE.machines[0].id, ROUTE_FILT = 'all', LIGHT_FILT = 'all', OPEN_ROUTE_ID = null, TO_FILT = 'all', TG_EXTRA = '', MAP_INST = null, MAP_SAT = false, MECH_MODE = false;
-function setRole(isMech) {
-  MECH_MODE = isMech;
-  const b1 = document.getElementById('rm-boss'), b2 = document.getElementById('rm-mech');
-  if (b1) b1.classList.toggle('on', !isMech); if (b2) b2.classList.toggle('on', isMech);
-  ['sn-fin','sec-fin','diesel-wrap','mn-fin'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = isMech ? 'none' : ''; });
-  if (isMech && TAB === 'fin') TAB = 'home';
-  render(); toast(isMech ? 'Режим механика: деньги и прибыль скрыты' : 'Режим руководителя: полный доступ');
-}
-function openCloudModal() {
-  const savedUrl = STATE.cloudUrl || '';
-  document.getElementById('modal').innerHTML = `
-    <div class="card-h" style="margin-bottom:12px">
-      <div><div style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)">Синхронизация таблицы механика</div><h3 style="margin-top:2px">Облачная таблица / Excel (CSV)</h3></div>
-      <button class="btn" onclick="closeModal()">✕</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div style="font-size:12px;color:var(--tx2);background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;line-height:1.5">Механик ведёт обычную <b>Google Таблицу</b> (или Excel) — вписывает туда направления, машины, водителей и кузов. <b>БОРТ</b> сам подтягивает эти данные по ссылке или из файла.</div>
-      <div><label class="flbl">Ссылка на Google Таблицу (Файл → Поделиться → Опубликовать в интернете → CSV)</label><input class="inp" id="cl-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" value="${esc(savedUrl)}" /></div>
-      <button class="btn ac lg" onclick="syncCloudUrl()">Подтянуть из Google Таблицы</button>
-      <div style="height:1px;background:var(--bd)"></div>
-      <div class="f2"><button class="btn lg" onclick="downloadMechTemplate()">Скачать шаблон Excel</button><label class="btn lg" style="cursor:pointer">Загрузить файл CSV<input type="file" accept=".csv,.txt" style="display:none" onchange="importLocalCsv(this)" /></label></div>
-      <button class="btn" onclick="exportCsv()">Выгрузить текущую сводку в Excel (CSV)</button>
-    </div>`;
-  document.getElementById('scrim').classList.add('open'); document.getElementById('modal').classList.add('open');
-}
-function parseMechCsv(text) {
-  const lines = text.replace(/^\ufeff/, '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  if (lines.length < 2) return 0;
-  const sep = lines[0].includes(';') ? ';' : ',';
-  let updated = 0;
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
-    if (cols.length < 4) continue;
-    const [rtName, rtRateStr, carId, drv, capStr] = cols;
-    let rt = STATE.routes.find(r => r.name.toLowerCase() === rtName.toLowerCase());
-    if (!rt && rtName) { rt = { id:'r'+Date.now()+i, name:rtName, mode:'ton', rate:Number(rtRateStr)||200, legKm:16, path:[[54.45,86.25],[54.50,86.40]] }; STATE.routes.push(rt); }
-    else if (rt && Number(rtRateStr) > 0) rt.rate = Number(rtRateStr);
-    const car = STATE.machines.find(m => m.id === carId || m.name.toLowerCase().includes(carId.toLowerCase()));
-    if (car && rt) { car.routeId = rt.id; if (drv) car.driver = drv; if (Number(capStr) > 0) car.capTon = Number(capStr); updated++; }
-  }
-  if (updated > 0) { saveState(); render(); }
-  return updated;
-}
-async function syncCloudUrl() {
-  const url = (document.getElementById('cl-url').value || '').trim();
-  if (!url) { toast('Вставь ссылку на опубликованную Google Таблицу'); return; }
-  STATE.cloudUrl = url; saveState();
-  try {
-    const res = await fetch(url); if (!res.ok) throw new Error('HTTP ' + res.status);
-    const n = parseMechCsv(await res.text()); closeModal();
-    toast(n ? `Обновлено из облака: ${n} бортов` : 'Таблица прочитана, но совпадений по бортам не найдено');
-  } catch (e) { toast('Не удалось прочитать ссылку — проверь публикацию CSV'); }
-}
-function importLocalCsv(inp) {
-  const file = inp.files && inp.files[0]; if (!file) return;
-  const rd = new FileReader();
-  rd.onload = () => { const n = parseMechCsv(String(rd.result || '')); closeModal(); toast(n ? `Загружено из Excel/CSV: ${n} бортов` : 'Проверь формат: скачай наш шаблон'); };
-  rd.readAsText(file, 'utf-8');
-}
-function downloadMechTemplate() {
-  const h = 'Направление;Тариф_руб;Борт_ID;Водитель;Кузов_т';
-  const rows = [h].concat(STATE.machines.map(m => { const r = getRoute(m.routeId); return [r.name, r.rate, m.id, m.driver, m.capTon].join(';'); }));
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')], { type:'text/csv;charset=utf-8' })); a.download = 'bort_shablon_mehanik.csv'; a.click();
-  toast('Шаблон для механика скачан');
-}
+function resetDemo() { STATE = JSON.parse(JSON.stringify(DEFAULT_STATE)); saveState(); closeModal(); toast('Демо-данные восстановлены'); render(); }
+let TAB = 'home', SEL_ID = STATE.machines[0].id, ROUTE_FILT = 'all', LIGHT_FILT = 'all', OPEN_ROUTE_ID = null, TO_FILT = 'all', MAP_INST = null, MAP_SAT = false, EDIT_CAR = false, LAST_PHOTO_DATA = '';
 const f = (n, d=0) => Number(n||0).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}).replace(/\u202f/g,' ');
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmtD = iso => { const p = String(iso||'').split('-'); return p.length===3 ? `${p[2]}.${p[1]}` : iso; };
-function toast(m) { const e = document.getElementById('toast'); e.textContent = m; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2300); }
-function setDiesel(v) { STATE.diesel = Math.max(1, Number(v) || 70); const el = document.getElementById('side-diesel'); if (el) el.value = STATE.diesel; saveState(); render(); toast(`Дизель ${STATE.diesel} ₽/л — пересчитано`); }
-function toggleTheme() { const h = document.documentElement; const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; h.setAttribute('data-theme', next); const b = document.getElementById('th-btn'); if (b) b.textContent = next === 'dark' ? 'Светлая' : 'Тёмная'; if (TAB === 'home') setTimeout(initMap, 20); }
-function getRoute(id) { return STATE.routes.find(r => r.id === id) || STATE.routes[0] || { id:'none', name:'Без маршрута', mode:'ton', rate:0, legKm:0 }; }
+const isBoss = () => STATE.role === 'boss', isDisp = () => STATE.role === 'disp', isMech = () => STATE.role === 'mech', isMob = () => window.innerWidth <= 1020;
+function toast(m) { const e = document.getElementById('toast'); e.textContent = m; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2400); }
+function toggleTheme() { const h = document.documentElement; const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; h.setAttribute('data-theme', next); const b = document.getElementById('th-btn'); if (b) b.textContent = next === 'dark' ? 'Светлая' : 'Тёмная'; if (TAB === 'home' && !isMech()) setTimeout(initMap, 25); }
+function getRoute(id) { return STATE.routes.find(r => r.id === id) || STATE.routes[0] || { id:'none', name:'Без маршрута', mode:'ton', rate:0, legKm:16, planCars:2 }; }
+function curDriver(m) { return STATE.shift === 'night' ? (m.drvNight || m.drvDay) : m.drvDay; }
+function periodMult() { return STATE.period === 'month' ? 24 : (STATE.period === 'week' ? 6 : 1); }
 function calc(m) {
-  const rt = getRoute(m.routeId);
-  const tons = m.tonMode === 'manual' ? Number(m.manualTons || 0) : Math.round(Number(m.trips || 0) * Number(m.capTon || 0));
-  const tonsSrc = m.tonMode === 'manual' ? 'весовая' : `${m.trips} × ${m.capTon} т`;
-  const rev = rt.mode === 'ton' ? tons * rt.rate : (rt.mode === 'trip' ? m.trips * rt.rate : m.dayKm * rt.rate);
-  const rateLbl = rt.mode === 'ton' ? `${f(rt.rate)} ₽/т` : (rt.mode === 'trip' ? `${f(rt.rate)} ₽/рейс` : `${f(rt.rate)} ₽/км`);
-  const totalFuelL = Number(m.burnedL || 0) + Number(m.slivL || 0);
-  const fuelRub = totalFuelL * STATE.diesel, slivRub = Number(m.slivL || 0) * STATE.diesel;
+  const rt = getRoute(m.routeId), mult = periodMult(), isExc = m.kind === 'exc';
+  const tons = isExc ? 0 : (m.tonMode === 'manual' ? Number(m.manualTons || 0) : Math.round(Number(m.trips || 0) * Number(m.capTon || 0)));
+  const tonsSrc = isExc ? `${f(m.workH,1)} м/ч` : (m.tonMode === 'manual' ? 'весовая' : `${m.trips} × ${m.capTon} т`);
+  const dayRev = isExc ? (m.workH * (m.hourRate || 4600)) : (rt.mode === 'ton' ? tons * rt.rate : (rt.mode === 'trip' ? m.trips * rt.rate : m.dayKm * rt.rate));
+  const rateLbl = isExc ? `${f(m.hourRate || 4600)} ₽/ч` : (rt.mode === 'ton' ? `${f(rt.rate)} ₽/т` : (rt.mode === 'trip' ? `${f(rt.rate)} ₽/рейс` : `${f(rt.rate)} ₽/км`));
+  const workFuelRub = Number(m.burnedL || 0) * STATE.diesel, slivRub = Number(m.slivL || 0) * STATE.diesel;
   const todayRep = STATE.maint.filter(x => x.machineId === m.id && x.today).reduce((s, x) => s + Number(x.cost || 0), 0);
-  const profit = rev - fuelRub - Number(m.wage || 0) - Number(m.fix || 0) - todayRep;
-  const tankPct = Math.min(100, Math.max(0, Math.round(m.tankNow / (m.tankCap || 1) * 100)));
-  const slivPct = Math.min(100 - tankPct, Math.round(m.slivL / (m.tankCap || 1) * 100));
-  const toLeft = Number(m.nextToKm || 0) - Number(m.odoKm || 0);
-  return { rt, tons, tonsSrc, rev, rateLbl, totalFuelL, fuelRub, slivRub, todayRep, profit, tankPct, slivPct, toLeft };
+  const dayProfit = dayRev - workFuelRub - slivRub - Number(m.wage || 0) - Number(m.fix || 0) - todayRep;
+  const profit = STATE.period === 'month' ? (m.monthProfit || dayProfit * 24) : (STATE.period === 'week' ? Math.round((m.monthProfit || dayProfit * 24) / 4) : dayProfit);
+  const rev = dayRev * mult, tankPct = Math.min(100, Math.max(0, Math.round(m.tankNow / (m.tankCap || 1) * 100))), slivPct = Math.min(100 - tankPct, Math.round(m.slivL / (m.tankCap || 1) * 100));
+  const toLeftKm = m.nextToKm ? (m.nextToKm - m.odoKm) : 99999, toLeftMh = m.nextToMh ? (m.nextToMh - m.mh) : 99999;
+  return { rt, isExc, tons: tons * mult, dayTons: tons, tonsSrc, rev, dayRev, rateLbl, workFuelRub, slivRub, todayRep, dayProfit, profit, tankPct, slivPct, toLeftKm, toLeftMh, toUrgent: toLeftKm <= 1500 || toLeftMh <= 60, toOver: toLeftKm <= 0 || toLeftMh <= 0, scaleDiff: isExc ? 0 : (Number(m.gpsTrips || 0) - Number(m.scaleTrips || 0)) };
 }
-function go(tab) {
-  TAB = tab; if (tab !== 'routes') OPEN_ROUTE_ID = null;
-  const titles = { home:'Командный пульт', routes:'Маршруты и тарифы', to:'ТО и ремонты', fin:'Экономика парка', tg:'Утренняя сводка 07:00' };
-  document.getElementById('page-title').textContent = titles[tab] || 'БОРТ';
-  ['home','routes','to','fin','tg'].forEach(k => { const s = document.getElementById('sn-'+k), m = document.getElementById('mn-'+k); if (s) s.classList.toggle('on', k === tab); if (m) m.classList.toggle('on', k === tab); });
-  render(); window.scrollTo({ top:0, behavior:'instant' });
+function openRoleModal() {
+  document.getElementById('modal').innerHTML = `
+    <div class="card-h" style="margin-bottom:12px"><div><div style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)">Личный кабинет (вход по роли)</div><h3 style="margin-top:2px">Выбери кабинет для проверки</h3></div><button class="btn sm" onclick="closeModal()">✕</button></div>
+    <div style="font-size:12px;color:var(--tx2);margin-bottom:12px">В боевой версии каждый сотрудник заходит только под своим PIN — сервер физически не отдаёт деньги механику и диспетчеру.</div>
+    <div style="display:flex;flex-direction:column;gap:8px">${Object.keys(ROLES).map(k => { const r = ROLES[k], on = STATE.role === k; return `<div class="role-card" style="${on?'border-color:var(--ac);background:var(--ac-s)':''}" onclick="switchRole('${k}')"><div><b>${r.name}</b><small>${r.desc}</small></div><span class="fi-plate mono">PIN ${r.pin}</span></div>`; }).join('')}</div>`;
+  openModalEl();
 }
-function selectCar(id) { SEL_ID = id; render(); }
-function initMap() {
-  const el = document.getElementById('live-map'); if (!el) return;
-  if (MAP_INST) { try { MAP_INST.remove(); } catch (e) {} MAP_INST = null; }
-  const sel = STATE.machines.find(m => m.id === SEL_ID) || STATE.machines[0];
-  if (typeof L === 'undefined') { el.innerHTML = `<svg viewBox="0 0 800 320" style="width:100%;height:100%;display:block;background:#0C0F14"><defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/></pattern></defs><rect width="800" height="320" fill="url(#g)"/></svg>`; return; }
-  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const tileUrl = MAP_SAT ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' : (dark ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}' : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}');
-  MAP_INST = L.map('live-map', { zoomControl: false, attributionControl: true }).setView([sel.lat, sel.lng], 11);
-  L.tileLayer(tileUrl, { maxZoom: 17, attribution: '&copy; Esri' }).addTo(MAP_INST);
-  const routeCols = ['#D8F33B', '#60A5FA', '#22C55E', '#EAB308'];
-  STATE.routes.forEach((r, idx) => { if (r.path && r.path.length) L.polyline(r.path, { color: routeCols[idx % routeCols.length], weight: 2.5, opacity: 0.72, dashArray: '6 6' }).addTo(MAP_INST); });
-  STATE.machines.forEach(m => {
-    const isSel = m.id === SEL_ID;
-    const icon = L.divIcon({ className: '', html: `<div class="bort-pin ${isSel ? 'active' : m.level}"><span>№${esc(m.id)}</span></div>`, iconSize: [52, 24], iconAnchor: [26, 12] });
-    L.marker([m.lat, m.lng], { icon, zIndexOffset: isSel ? 900 : 100 }).addTo(MAP_INST).on('click', () => selectCar(m.id));
-  });
+function switchRole(role) { STATE.role = role; TAB = role === 'mech' ? 'to' : 'home'; EDIT_CAR = false; OPEN_ROUTE_ID = null; saveState(); closeModal(); render(); toast(`Кабинет: ${ROLES[role].name}`); }
+function openSettingsModal() {
+  document.getElementById('modal').innerHTML = `
+    <div class="card-h" style="margin-bottom:12px"><h3>Настройки и каналы связи</h3><button class="btn sm" onclick="closeModal()">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      ${isBoss() ? `<div><label class="flbl">Цена дизельного топлива (₽/л)</label><input type="number" class="inp num" value="${STATE.diesel}" onchange="STATE.diesel=+this.value||70;saveState();render();toast('Цена ДТ обновлена')" /></div>` : ''}
+      <div><label class="flbl">Куда слать уведомления (работает в РФ без VPN)</label><div class="seg" style="grid-template-columns:repeat(2,1fr);gap:4px">${[['bort','Внутри БОРТ (без VPN)'],['max','MAX-бот (РФ без VPN)'],['vk','VK Мессенджер'],['tg','Telegram-бот']].map(([k,l]) => `<button class="${STATE.notifyChannel===k?'on':''}" onclick="STATE.notifyChannel='${k}';saveState();openSettingsModal();toast('Канал: ${l}')">${l}</button>`).join('')}</div></div>
+      <div class="f2"><button class="btn lg" onclick="toggleTheme()">Сменить тему</button><button class="btn lg" onclick="openCloudModal()">Облако / Excel</button></div>
+      ${isBoss() ? `<button class="btn" onclick="exportCsv()">Скачать сводку в Excel (CSV)</button>` : ''}
+      <div style="padding-top:10px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-size:11.5px;color:var(--mu)">Вернуть тестовые данные</span><button class="btn sm rd" onclick="resetDemo()">Сброс демо</button></div>
+    </div>`;
+  openModalEl();
 }
-function truckCadSvg(m, c) {
-  const fuelCol = m.slivL > 0 ? '#F05252' : (c.tankPct < 30 ? '#EAB308' : '#D8F33B');
-  const fuelW = Math.max(4, Math.round(44 * c.tankPct / 100));
-  return `<svg class="cad-svg" viewBox="0 0 320 96"><line x1="12" y1="84" x2="308" y2="84" stroke="rgba(255,255,255,0.12)" stroke-width="1"/><path d="M24 22 L196 22 L206 58 L30 58 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.34)" stroke-width="1.4"/><path d="M20 18 L198 18 L196 22 L24 22 Z" fill="rgba(255,255,255,0.1)"/><rect x="34" y="32" width="${Math.round(160 * Math.max(0.25, Math.min(1, m.capTon / 30)))}" height="22" rx="2" fill="rgba(216,243,59,0.12)" stroke="rgba(216,243,59,0.45)" stroke-width="1" stroke-dasharray="3 2"/><text x="42" y="47" fill="#D8F33B" font-size="10" font-weight="700" font-family="ui-monospace,monospace">${m.capTon} т / кузов</text><rect x="30" y="59" width="246" height="6" rx="2" fill="rgba(255,255,255,0.14)"/><path d="M214 26 L264 26 L282 46 L282 64 L214 64 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.45)" stroke-width="1.4"/><path d="M244 31 L262 31 L274 45 L244 45 Z" fill="rgba(96,165,250,0.16)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="148" y="61" width="48" height="14" rx="3" fill="#0B0D0E" stroke="${fuelCol}" stroke-width="1.4"/><rect x="150" y="63" width="${fuelW}" height="10" rx="1.5" fill="${fuelCol}" opacity="0.85"/><circle cx="62" cy="74" r="10" fill="#0B0D0E" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="62" cy="74" r="3.5" fill="rgba(255,255,255,0.35)"/><circle cx="92" cy="74" r="10" fill="#0B0D0E" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="92" cy="74" r="3.5" fill="rgba(255,255,255,0.35)"/><circle cx="226" cy="74" r="10" fill="#0B0D0E" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="226" cy="74" r="3.5" fill="rgba(255,255,255,0.35)"/><circle cx="258" cy="74" r="10" fill="#0B0D0E" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><circle cx="258" cy="74" r="3.5" fill="rgba(255,255,255,0.35)"/><text x="172" y="14" text-anchor="middle" fill="${fuelCol}" font-size="10" font-weight="700" font-family="ui-monospace,monospace">${m.slivL ? `СЛИВ −${m.slivL} Л` : `БАК ${c.tankPct}%`}</text></svg>`;
+function openCaptureModal(presetType='odo', preCarId='') {
+  const car = STATE.machines.find(x => x.id === (preCarId || SEL_ID)) || STATE.machines[0];
+  const titles = { odo:'📷 Фото щитка / одометра', scale:'📷 Фото накладной с весовой', defect:'📷 Фото поломки / чека' };
+  document.getElementById('modal').innerHTML = `
+    <div class="card-h" style="margin-bottom:12px"><div><div style="font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu)">Быстрая фиксация · без VPN</div><h3 style="margin-top:2px">${titles[presetType]||'Быстрая отправка'}</h3></div><button class="btn sm" onclick="closeModal()">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div><label class="flbl">Выберите борт</label><select class="sel" id="cp-car">${STATE.machines.map(m => `<option value="${m.id}" ${m.id===car.id?'selected':''}>${esc(m.name)} (${esc(m.plate)})</option>`).join('')}</select></div>
+      <label class="btn ac lg" style="cursor:pointer;width:100%">📷 Сделать фото камерой (или выбрать)<input type="file" accept="image/*" capture="environment" style="display:none" onchange="onPhotoPicked(this,'${presetType}')" /></label>
+      <div id="cp-preview" style="display:none;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px;font-size:12px;color:var(--gr)"></div>
+      <div><label class="flbl">${presetType==='odo'?'Распознанный пробег (км)':(presetType==='scale'?'Распознанный вес по накладной (т)':'Узел / комментарий (можно 1 тапом)')}</label>${presetType==='odo' ? `<input type="number" class="inp num" id="cp-val" value="${car.odoKm + 320}" />` : (presetType==='scale' ? `<input type="number" class="inp num" id="cp-val" value="26.4" step="0.1" />` : `<input class="inp" id="cp-val" placeholder="Например: Лопнула задняя рессора" /><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">${['Замена рессоры','Турбина','ТО-1 масло/фильтры','Шприцовка','Прокол колеса'].map(t=>`<button type="button" class="pill" onclick="document.getElementById('cp-val').value='${t}'">${t}</button>`).join('')}</div>`)}</div>
+      <button class="btn lg gr" onclick="submitCapture('${presetType}')">Отправить в ленту смены</button>
+    </div>`;
+  openModalEl();
+}
+function onPhotoPicked(inp, type) {
+  const file = inp.files && inp.files[0]; if (!file) return;
+  const rd = new FileReader();
+  rd.onload = () => { LAST_PHOTO_DATA = String(rd.result || ''); const pv = document.getElementById('cp-preview'); if (pv) { pv.style.display = 'flex'; pv.style.alignItems = 'center'; pv.style.gap = '10px'; pv.innerHTML = `<img src="${LAST_PHOTO_DATA}" style="width:48px;height:48px;object-fit:cover;border-radius:7px"/><div><b>Фото прикреплено</b><div style="color:var(--mu)">ИИ распознал цифры автоматически — проверь и жми «Отправить»</div></div>`; } };
+  rd.readAsDataURL(file);
+}
+function submitCapture(type) {
+  const cid = document.getElementById('cp-car').value, val = (document.getElementById('cp-val').value || '').trim(), m = STATE.machines.find(x => x.id === cid); if (!m) return;
+  const now = new Date(), hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  let tag = 'Событие', text = '', badge = 'bl';
+  if (type === 'odo') { const km = Number(val) || m.odoKm; if (km > m.odoKm) m.odoKm = km; tag = 'Одометр'; text = `Фото щитка ${m.name} · пробег обновлён до ${f(m.odoKm)} км`; badge = 'bl'; }
+  else if (type === 'scale') { const t = Number(val) || 25; m.tonMode = 'manual'; m.manualTons = Math.round((m.manualTons || m.trips * m.capTon) + t); m.scaleTrips = (m.scaleTrips || 0) + 1; tag = 'Весовая'; text = `Фото накладной ${m.name} · +${t} т добавлено в факт по весам`; badge = 'gr'; }
+  else { tag = 'Поломка'; text = `${m.name} (${f(m.odoKm)} км) · ${val || 'Фото дефекта из ремзоны'}`; badge = 'rd'; STATE.maint.unshift({ id:'m'+Date.now(), date:'2026-11-25', machineId:m.id, odoKm:m.odoKm, mh:m.mh, type:'rep', work:val||'Дефект (фото)', cost:0, today:true, author:ROLES[STATE.role].name, photo:'photo.jpg' }); }
+  STATE.feed.unshift({ id:'f'+Date.now(), time:hhmm, who:`${ROLES[STATE.role].short}`, tag, text, badge, img:LAST_PHOTO_DATA });
+  LAST_PHOTO_DATA = ''; saveState(); closeModal(); render(); toast('Отправлено в ленту и уведомления!');
+}
+function setTechState(carId, nextState) {
+  const m = STATE.machines.find(x => x.id === carId); if (!m) return;
+  m.techState = nextState;
+  if (nextState === 'ok') { m.level = 'gr'; m.status = 'На линии'; m.downH = 0; m.partWait = ''; }
+  else if (nextState === 'repair') { m.level = 'rd'; m.status = 'Ремзона · в работе'; m.speed = 0; }
+  else { m.level = 'rd'; m.status = 'Ремзона · ждёт запчасть'; m.speed = 0; }
+  const label = nextState === 'ok' ? 'Выпущен на линию (разблокирован у штаба)' : (nextState === 'parts' ? 'Поставлен в ожидание запчастей' : 'Загнан в ремзону (заблокирован у штаба)');
+  STATE.feed.unshift({ id:'f'+Date.now(), time:'сейчас', who:ROLES[STATE.role].short, tag:'Ремзона', text:`${m.name} — ${label}`, badge:nextState==='ok'?'gr':'rd', img:'' });
+  saveState(); render(); toast(label);
 }
 function openAddMaint(preId='') {
   const car = STATE.machines.find(x => x.id === (preId || SEL_ID)) || STATE.machines[0];
   document.getElementById('modal').innerHTML = `
-    <div class="card-h" style="margin-bottom:14px"><div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mu)">Журнал обслуживания</div><h3 style="margin-top:2px">Новая запись ТО / ремонта</h3></div><button class="btn" onclick="closeModal()">✕</button></div>
-    <div style="display:flex;flex-direction:column;gap:11px">
-      <div><label class="flbl">Борт</label><select class="sel" id="fm-car" onchange="syncOdo()">${STATE.machines.map(m => `<option value="${m.id}" ${m.id===car.id?'selected':''}>${esc(m.name)} · ${esc(m.plate)}</option>`).join('')}</select></div>
+    <div class="card-h" style="margin-bottom:12px"><h3>Записать ремонт / ТО</h3><button class="btn sm" onclick="closeModal()">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div><label class="flbl">Борт</label><select class="sel" id="fm-car" onchange="syncOdo()">${STATE.machines.map(m => `<option value="${m.id}" ${m.id===car.id?'selected':''}>${esc(m.name)} (${esc(m.plate)})</option>`).join('')}</select></div>
       <div class="f2"><div><label class="flbl">Дата</label><input type="date" class="inp" id="fm-date" value="2026-11-25" /></div><div><label class="flbl">Пробег (км)</label><input type="number" class="inp num" id="fm-odo" value="${car.odoKm}" /></div></div>
-      <div class="f2"><div><label class="flbl">Категория</label><select class="sel" id="fm-type"><option value="rep">Ремонт / замена узла</option><option value="to">Плановое ТО (+15 000 км)</option></select></div><div><label class="flbl">Стоимость (₽)</label><input type="number" class="inp num" id="fm-cost" placeholder="42000" /></div></div>
-      <div><label class="flbl">Что сделано / что заменено</label><input class="inp" id="fm-work" placeholder="Например: Замена рессоры / турбины" /><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">${['Замена рессоры','Замена турбины','ТО-2: масло и фильтры','Замена колодок','Ремонт КПП'].map(t => `<button type="button" class="pill" onclick="document.getElementById('fm-work').value='${t}'">${t}</button>`).join('')}</div></div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mu);cursor:pointer"><input type="checkbox" id="fm-today" checked /> Списать в расходы за текущие сутки</label>
-      <button class="btn ac lg" onclick="saveMaint()">Сохранить запись</button>
+      <div class="f2"><div><label class="flbl">Моточасы (м/ч)</label><input type="number" class="inp num" id="fm-mh" value="${car.mh}" /></div><div><label class="flbl">Тип</label><select class="sel" id="fm-type"><option value="rep">Ремонт / замена</option><option value="to">Плановое ТО (+15т км / +300 м/ч)</option></select></div></div>
+      ${isBoss() ? `<div><label class="flbl">Стоимость по счёту (₽)</label><input type="number" class="inp num" id="fm-cost" placeholder="42000" /></div>` : `<input type="hidden" id="fm-cost" value="0" />`}
+      <div><label class="flbl">Что сделано / ждём деталь</label><input class="inp" id="fm-work" placeholder="Например: Замена рессоры / турбины" /><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">${['Замена рессоры','Замена турбины','ТО-1: масло и фильтры','Шприцовка','Колодки'].map(t => `<button type="button" class="pill" onclick="document.getElementById('fm-work').value='${t}'">${t}</button>`).join('')}</div></div>
+      <button class="btn ac lg" onclick="saveMaint()">Сохранить в журнал</button>
     </div>`;
-  document.getElementById('scrim').classList.add('open'); document.getElementById('modal').classList.add('open');
+  openModalEl();
 }
-function closeModal() { document.getElementById('scrim').classList.remove('open'); document.getElementById('modal').classList.remove('open'); }
-function syncOdo() { const m = STATE.machines.find(x => x.id === document.getElementById('fm-car').value); if (m) document.getElementById('fm-odo').value = m.odoKm; }
+function syncOdo() { const m = STATE.machines.find(x => x.id === document.getElementById('fm-car').value); if (m) { document.getElementById('fm-odo').value = m.odoKm; document.getElementById('fm-mh').value = m.mh; } }
 function saveMaint() {
-  const machineId = document.getElementById('fm-car').value, date = document.getElementById('fm-date').value || '2026-11-25', odoKm = Number(document.getElementById('fm-odo').value || 0), type = document.getElementById('fm-type').value, cost = Number(document.getElementById('fm-cost').value || 0), work = (document.getElementById('fm-work').value || '').trim(), today = document.getElementById('fm-today').checked;
-  if (!work) { toast('Укажи, что делали или меняли'); return; }
-  STATE.maint.unshift({ id:'m'+Date.now(), date, machineId, odoKm, type, work, cost, today });
+  const machineId = document.getElementById('fm-car').value, date = document.getElementById('fm-date').value || '2026-11-25', odoKm = Number(document.getElementById('fm-odo').value || 0), mh = Number(document.getElementById('fm-mh').value || 0), type = document.getElementById('fm-type').value, cost = Number((document.getElementById('fm-cost')||{}).value || 0), work = (document.getElementById('fm-work').value || '').trim();
+  if (!work) { toast('Напиши, что делали'); return; }
+  STATE.maint.unshift({ id:'m'+Date.now(), date, machineId, odoKm, mh, type, work, cost, today:true, author:ROLES[STATE.role].name, photo:'' });
   const m = STATE.machines.find(x => x.id === machineId);
-  if (m) { if (odoKm > m.odoKm) m.odoKm = odoKm; if (type === 'to') m.nextToKm = m.odoKm + 15000; }
-  saveState(); closeModal(); render(); toast(type === 'to' ? 'ТО записано — интервал обновлён' : 'Ремонт добавлен');
+  if (m) { if (odoKm > m.odoKm) m.odoKm = odoKm; if (mh > m.mh) m.mh = mh; if (type === 'to') { m.nextToKm = m.odoKm + 15000; m.nextToMh = m.mh + 300; if (m.level === 'yl') { m.level = 'gr'; m.status = 'На линии'; } } }
+  saveState(); closeModal(); render(); toast(type === 'to' ? 'ТО закрыто — счётчики км и м/ч обновлены' : 'Запись сохранена');
 }
-function delMaint(id) { STATE.maint = STATE.maint.filter(x => x.id !== id); saveState(); render(); toast('Запись удалена'); }
-function updCar(id, field, val) { const m = STATE.machines.find(x => x.id === id); if (!m) return; m[field] = val; if (field === 'trips') { const rt = getRoute(m.routeId); m.dayKm = Math.round(val * (rt.legKm || 16)); } saveState(); render(); toast('Сохранено'); }
-function addNewRoute() { const id = 'r' + Date.now(); STATE.routes.push({ id, name:`Маршрут №${STATE.routes.length+1}`, mode:'ton', rate:200, legKm:15, path:[[54.44,86.25],[54.49,86.38]] }); OPEN_ROUTE_ID = id; saveState(); render(); toast('Маршрут создан'); }
+function openCloudModal() {
+  document.getElementById('modal').innerHTML = `
+    <div class="card-h" style="margin-bottom:12px"><h3>Облачная таблица / Excel (CSV)</h3><button class="btn sm" onclick="closeModal()">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div style="font-size:12px;color:var(--tx2);background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px">CSV — обычная таблица для Excel и Google Таблиц. Подтягивает направления, борта, водителей или выгрузку весовой.</div>
+      <div><label class="flbl">Ссылка на Google Таблицу (Опубликовать → CSV)</label><input class="inp" id="cl-url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" value="${esc(STATE.cloudUrl||'')}" /></div>
+      <button class="btn ac lg" onclick="syncCloudUrl()">Подтянуть из облака</button>
+      <div class="f2"><button class="btn lg" onclick="downloadTemplate()">Шаблон Excel</button><label class="btn lg" style="cursor:pointer">Загрузить CSV<input type="file" accept=".csv,.txt" style="display:none" onchange="importLocalCsv(this)" /></label></div>
+    </div>`;
+  openModalEl();
+}
+function parseCsv(text) {
+  const lines = text.replace(/^\ufeff/,'').split(/\r?\n/).map(l=>l.trim()).filter(Boolean); if (lines.length < 2) return 0;
+  const sep = lines[0].includes(';') ? ';' : ','; let n = 0;
+  for (let i = 1; i < lines.length; i++) {
+    const c = lines[i].split(sep).map(x=>x.trim().replace(/^"|"$/g,'')); if (c.length < 3) continue;
+    const [rtName, carId, drv, capStr] = c;
+    let rt = STATE.routes.find(r => r.name.toLowerCase() === rtName.toLowerCase());
+    if (!rt && rtName) { rt = { id:'r'+Date.now()+i, name:rtName, mode:'ton', rate:200, legKm:16, planCars:2, path:[[54.45,86.25],[54.50,86.40]] }; STATE.routes.push(rt); }
+    const car = STATE.machines.find(m => m.id === carId || m.name.toLowerCase().includes(carId.toLowerCase()));
+    if (car && rt && car.techState === 'ok') { car.routeId = rt.id; if (drv) car.drvDay = drv; if (Number(capStr)>0) car.capTon = Number(capStr); n++; }
+  }
+  if (n) { saveState(); render(); } return n;
+}
+async function syncCloudUrl() { const url = (document.getElementById('cl-url').value||'').trim(); if (!url) return toast('Вставь ссылку'); STATE.cloudUrl = url; saveState(); try { const r = await fetch(url); if (!r.ok) throw 0; const n = parseCsv(await r.text()); closeModal(); toast(n?`Обновлено бортов: ${n}`:'Совпадений не найдено'); } catch (e) { toast('Ошибка чтения ссылки CSV'); } }
+function importLocalCsv(inp) { const file = inp.files && inp.files[0]; if (!file) return; const rd = new FileReader(); rd.onload = () => { const n = parseCsv(String(rd.result||'')); closeModal(); toast(n?`Загружено бортов: ${n}`:'Проверь формат шаблона'); }; rd.readAsText(file, 'utf-8'); }
+function downloadTemplate() { const h = 'Направление;Борт_ID;Водитель;Кузов_т'; const rows = [h].concat(STATE.machines.map(m => [getRoute(m.routeId).name, m.id, m.drvDay, m.capTon].join(';'))); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'})); a.download = 'bort_raznaryadka.csv'; a.click(); toast('Шаблон скачан'); }
+function exportCsv() { const h = 'Борт;Госномер;Водитель_день;Водитель_ночь;Маршрут;Рейсы;Тоннаж_т;Пробег_км;Одометр;Моточасы;Слив_л;Чистыми_руб'; const rows = [h].concat(STATE.machines.map(m => { const c = calc(m); return [m.name,m.plate,m.drvDay,m.drvNight,c.rt.name,m.trips,c.dayTons,m.dayKm,m.odoKm,m.mh,m.slivL,Math.round(c.dayProfit)].join(';'); })); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'})); a.download = 'bort_svodka.csv'; a.click(); toast('Excel скачан'); }
+function openMobileCarModal(id) { SEL_ID = id; const m = STATE.machines.find(x => x.id === id); if (!m) return; document.getElementById('modal').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><button class="btn sm" onclick="closeModal()">← Все борта</button><span class="fi-plate mono">${esc(m.plate)}</span></div>${passportHtml(m, true)}`; openModalEl(); }
+function selectCar(id) { SEL_ID = id; EDIT_CAR = false; if (isMob()) { openMobileCarModal(id); return; } render(); }
+function updCar(id, field, val) { const m = STATE.machines.find(x => x.id === id); if (!m) return; if (field === 'routeId' && m.techState !== 'ok') { toast('Борт заблокирован ремзоной! Сначала механик выпускает на линию.'); return; } m[field] = val; if (field === 'trips') { const rt = getRoute(m.routeId); m.dayKm = Math.round(val * (rt.legKm || 16)); m.gpsTrips = val; } saveState(); render(); if (isMob() && document.getElementById('modal').classList.contains('open')) openMobileCarModal(id); toast('Сохранено'); }
+function resolveSliv(id, action) { const m = STATE.machines.find(x => x.id === id); if (!m) return; m.slivStatus = action; STATE.feed.unshift({ id:'f'+Date.now(), time:'сейчас', who:'Директор', tag:'Слив решён', text:`${m.name} (−${m.slivL} л): ${action==='hold'?'Удержать из ЗП':'Помечено как перекачка'}`, badge:'gr', img:'' }); saveState(); render(); toast(action==='hold'?'Отмечено к удержанию из ЗП':'Отмечено как перекачка'); }
+function addNewRoute() { const id = 'r' + Date.now(); STATE.routes.push({ id, name:`Маршрут №${STATE.routes.length+1}`, mode:'ton', rate:200, legKm:15, planCars:2, path:[[54.44,86.25],[54.49,86.38]] }); OPEN_ROUTE_ID = id; saveState(); render(); toast('Маршрут создан'); }
 function updRoute(id, field, val) { const r = STATE.routes.find(x => x.id === id); if (!r) return; r[field] = val; saveState(); render(); }
-function delRoute(id) { if (STATE.routes.length <= 1) { toast('Должен остаться минимум 1 маршрут'); return; } const fb = STATE.routes.find(x => x.id !== id).id; STATE.machines.forEach(m => { if (m.routeId === id) m.routeId = fb; }); STATE.routes = STATE.routes.filter(x => x.id !== id); OPEN_ROUTE_ID = null; saveState(); render(); toast('Маршрут удалён'); }
-function assignCar(routeId) { const cid = document.getElementById('as-car').value, drv = (document.getElementById('as-drv').value || '').trim(), m = STATE.machines.find(x => x.id === cid); if (!m) return; m.routeId = routeId; if (drv) m.driver = drv; saveState(); render(); toast(`${m.name} переведена на маршрут`); }
-function syncAssignDrv() { const m = STATE.machines.find(x => x.id === document.getElementById('as-car').value); if (m) document.getElementById('as-drv').value = m.driver; }
-function createCarOnRoute(routeId) {
-  const name = (document.getElementById('nc-name').value || '').trim(); if (!name) { toast('Введи марку и борт'); return; }
-  const plate = (document.getElementById('nc-plate').value || '').trim() || 'Е 100 КХ 42', driver = (document.getElementById('nc-drv').value || '').trim() || 'Не назначен', capTon = Number(document.getElementById('nc-cap').value || 25), rt = getRoute(routeId), id = String(STATE.machines.length + 20);
-  STATE.machines.push({ id, name, plate, driver, routeId, capTon, tonMode:'auto', manualTons:capTon*16, trips:16, dayKm:16*(rt.legKm||15), odoKm:105000, nextToKm:120000, workH:9.6, idleH:1.2, downH:1.2, tankCap:500, tankNow:340, burnedL:295, slivL:0, wage:8600, fix:17500, level:'gr', status:'На линии', speed:42, note:'Добавлен в парк.', lat:54.47, lng:86.32 });
-  saveState(); render(); toast(`Борт «${name}» добавлен`);
+function assignCar(routeId) { const cid = document.getElementById('as-car').value, drv = (document.getElementById('as-drv').value||'').trim(), m = STATE.machines.find(x => x.id === cid); if (!m) return; if (m.techState !== 'ok') { toast('Нельзя поставить на маршрут: борт на рембазе!'); return; } m.routeId = routeId; if (drv) m.drvDay = drv; saveState(); render(); toast(`${m.name} назначен на маршрут`); }
+function openModalEl() { document.getElementById('scrim').classList.add('open'); document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('scrim').classList.remove('open'); document.getElementById('modal').classList.remove('open'); }
+function truckCadSvg(m, c) {
+  const fuelCol = m.slivL > 0 ? '#F05252' : (c.tankPct < 30 ? '#EAB308' : '#D8F33B'), fuelW = Math.max(4, Math.round(42 * c.tankPct / 100));
+  if (m.kind === 'exc') return `<svg class="cad-svg" viewBox="0 0 320 94"><line x1="12" y1="82" x2="308" y2="82" stroke="rgba(255,255,255,.14)" stroke-width="1"/><rect x="70" y="64" width="110" height="16" rx="8" fill="#0B0D0E" stroke="rgba(255,255,255,.45)" stroke-width="2"/><path d="M84 30 L166 30 L166 62 L84 62 Z" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.4)" stroke-width="1.4"/><path d="M166 44 L224 14 L268 42 L254 68 L236 62" fill="none" stroke="#D8F33B" stroke-width="3" stroke-linejoin="round"/><text x="125" y="50" text-anchor="middle" fill="#D8F33B" font-size="10" font-weight="700" font-family="ui-monospace,monospace">${f(m.workH,1)} м/ч</text></svg>`;
+  return `<svg class="cad-svg" viewBox="0 0 320 94"><line x1="12" y1="84" x2="308" y2="84" stroke="rgba(255,255,255,0.12)" stroke-width="1"/><path d="M22 20 L194 20 L204 56 L28 56 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.34)" stroke-width="1.4"/><rect x="32" y="30" width="${Math.round(156 * Math.max(.25, Math.min(1, m.capTon / 30)))}" height="21" rx="2" fill="rgba(216,243,59,0.11)" stroke="rgba(216,243,59,0.45)" stroke-width="1" stroke-dasharray="3 2"/><text x="40" y="44" fill="#D8F33B" font-size="10" font-weight="700" font-family="ui-monospace,monospace">${m.capTon} т / 8×4</text><rect x="28" y="57" width="250" height="6" rx="2" fill="rgba(255,255,255,0.14)"/><path d="M214 24 L264 24 L282 44 L282 62 L214 62 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.45)" stroke-width="1.4"/><path d="M244 29 L262 29 L274 43 L244 43 Z" fill="rgba(96,165,250,0.16)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="138" y="60" width="46" height="14" rx="3" fill="#0B0D0E" stroke="${fuelCol}" stroke-width="1.4"/><rect x="140" y="62" width="${fuelW}" height="10" rx="1.5" fill="${fuelCol}" opacity="0.85"/><circle cx="56" cy="74" r="9.5" fill="#0B0D0E" stroke="rgba(255,255,255,0.52)" stroke-width="2"/><circle cx="56" cy="74" r="3" fill="rgba(255,255,255,0.35)"/><circle cx="84" cy="74" r="9.5" fill="#0B0D0E" stroke="rgba(255,255,255,0.52)" stroke-width="2"/><circle cx="84" cy="74" r="3" fill="rgba(255,255,255,0.35)"/><circle cx="212" cy="74" r="9.5" fill="#0B0D0E" stroke="rgba(255,255,255,0.52)" stroke-width="2"/><circle cx="212" cy="74" r="3" fill="rgba(255,255,255,0.35)"/><circle cx="248" cy="74" r="9.5" fill="#0B0D0E" stroke="rgba(255,255,255,0.52)" stroke-width="2"/><circle cx="248" cy="74" r="3" fill="rgba(255,255,255,0.35)"/><text x="161" y="13" text-anchor="middle" fill="${fuelCol}" font-size="10" font-weight="700" font-family="ui-monospace,monospace">${m.slivL ? `СЛИВ −${m.slivL} Л` : `БАК ${c.tankPct}%`}</text></svg>`;
+}
+function passportHtml(m, inModal=false) {
+  const c = calc(m), logs = STATE.maint.filter(x => x.machineId === m.id), freeDrivers = STATE.drivers.filter(d => d.state === 'free'), drv = curDriver(m);
+  return `<div class="passport" style="${inModal?'border:none;background:transparent':''}">
+    <div class="pass-h" style="${inModal?'padding:0 0 12px':''}">
+      <div class="pass-title"><h3>${esc(m.name)}</h3>${inModal?'':`<span class="fi-plate mono">${esc(m.plate)}</span>`}<span class="status-chip ${m.level}"><span class="dot ${m.level}"></span>${esc(m.status)}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${!isMech() ? `<button class="btn sm" onclick="EDIT_CAR=!EDIT_CAR;${inModal?`openMobileCarModal('${m.id}')`:'render()'}">${EDIT_CAR?'Готово':'Изменить'}</button>` : ''}<button class="btn sm ac" onclick="openCaptureModal('defect','${m.id}')">📷 Фото</button></div>
+    </div>
+    <div class="pass-top-band">
+      <div class="pass-col" style="${inModal?'padding:12px 0':''}"><div class="col-lbl"><span>Телеметрия</span><span class="mono">${m.odoKm?`${f(m.odoKm)} КМ · `:''}${f(m.mh)} М/Ч</span></div><div class="cad-stage"><div class="cad-tags mono"><span>День: ${esc(m.drvDay)} · Ночь: ${esc(m.drvNight)}</span>${isBoss()?`<span>${c.rateLbl}</span>`:''}</div>${truckCadSvg(m, c)}</div></div>
+      <div class="pass-col" style="justify-content:space-between;${inModal?'padding:12px 0':''}">
+        <div class="col-lbl"><span>Топливо (ДУТ Gelios)</span><span class="mono">${m.tankNow} / ${m.tankCap} Л</span></div>
+        <div class="gauge-box"><div class="gauge-top num"><span style="color:var(--mu)">Остаток ${c.tankPct}%</span><b>На работу: ${m.burnedL} л</b></div><div class="gauge-bar"><div class="gauge-fill ${c.tankPct<30?'low':''}" style="width:${c.tankPct}%"></div>${m.slivL?`<div class="gauge-loss" style="width:${Math.max(12,c.slivPct)}%"></div>`:''}</div><div class="gauge-ticks mono"><span>0</span><span>¼</span><span>½</span><span>¾</span><span>F</span></div></div>
+        ${m.slivL ? `<div style="font-size:12px;color:var(--rd);font-weight:700;padding:8px 10px;border-radius:8px;background:var(--rd-s);display:flex;flex-direction:column;gap:7px"><div>СЛИВ −${m.slivL} л${isBoss()?` (−${f(c.slivRub)} ₽)`:''} · ${esc(m.slivInfo)}</div>${isBoss() && m.slivStatus==='open' ? `<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm rd" onclick="resolveSliv('${m.id}','hold')">Удержать из ЗП</button><button class="btn sm" onclick="toast('Факт слива отправлен водителю (${esc(drv)})')">Скинуть факт</button><button class="btn sm" onclick="toast('Вызов водителю: ${esc(drv)}')">Позвонить</button></div>` : (m.slivStatus==='hold'?`<span style="color:var(--gr)">✓ Отмечено к удержанию из ЗП</span>`:'')}</div>` : `<div style="font-size:12px;color:var(--tx2);padding:8px 10px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)">${m.techState!=='ok'?esc(m.partWait||'В ремзоне'):`Смена 12 ч: работа ${f(m.workH,1)} ч · холостой ${f(m.idleH,1)} ч${m.downH?` · рембаза ${f(m.downH,1)} ч`:''}`}</div>`}
+      </div>
+    </div>
+    <div class="pass-grid">
+      <div class="pass-col" style="${inModal?'padding:12px 0':''}">
+        <div class="col-lbl"><span>Выработка · сутки</span><span class="mono">${c.tonsSrc}</span></div>
+        ${c.isExc ? `<div class="m3 num"><div class="m3-box"><span>Работа</span><b style="color:var(--ac)">${f(m.workH,1)} м/ч</b></div><div class="m3-box"><span>Холостой</span><b>${f(m.idleH,1)} ч</b></div><div class="m3-box"><span>Моточасы</span><b>${f(m.mh)}</b></div></div>` : `<div class="m3 num"><div class="m3-box"><span>Рейсы GPS</span><b>${m.gpsTrips}</b></div><div class="m3-box"><span>Тоннаж</span><b style="color:var(--ac)">${f(c.dayTons)} т</b></div><div class="m3-box"><span>Пробег</span><b>${f(m.dayKm)} км</b></div></div>`}
+        ${c.scaleDiff !== 0 ? `<div style="font-size:11.5px;color:var(--yl);background:var(--yl-s);padding:6px 9px;border-radius:7px;font-weight:700">Расхождение весовой: GPS ${m.gpsTrips} рейс. vs Весы ${m.scaleTrips} талонов (не хватает ${c.scaleDiff})</div>` : ''}
+        ${EDIT_CAR && !isMech() ? `<div class="seg"><button class="${m.tonMode==='auto'?'on':''}" onclick="updCar('${m.id}','tonMode','auto')">Кузов × рейсы</button><button class="${m.tonMode==='manual'?'on':''}" onclick="updCar('${m.id}','tonMode','manual')">Факт по весам</button></div><div class="f2"><div><label class="flbl">Кузов (т)</label><input type="number" class="inp num" value="${m.capTon}" onchange="updCar('${m.id}','capTon',+this.value||25)" /></div><div><label class="flbl">${m.tonMode==='manual'?'Тонны по весам':'Рейсов'}</label><input type="number" class="inp num" value="${m.tonMode==='manual'?m.manualTons:m.trips}" onchange="updCar('${m.id}','${m.tonMode==='manual'?'manualTons':'trips'}',+this.value||0)" /></div></div><div class="f2"><div><label class="flbl">Маршрут</label><select class="sel" onchange="updCar('${m.id}','routeId',this.value)">${STATE.routes.map(r=>`<option value="${r.id}" ${r.id===m.routeId?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div><div><label class="flbl">Водитель (резерв: ${freeDrivers.length})</label><select class="sel" onchange="updCar('${m.id}','drvDay',this.value)">${STATE.drivers.map(d=>`<option value="${esc(d.name)}" ${d.name===m.drvDay?'selected':''}>${esc(d.name)}${d.state==='free'?' (резерв)':''}</option>`).join('')}</select></div></div>` : `<div style="font-size:12px;display:flex;flex-direction:column;gap:4px"><div class="kv-row"><span style="color:var(--mu)">Маршрут</span><b>${esc(c.rt.name)}</b></div><div class="kv-row"><span style="color:var(--mu)">Смена День / Ночь</span><b>${esc(m.drvDay)} / ${esc(m.drvNight)}</b></div></div>`}
+        <div><div class="kv-row" style="border:none;padding:0 0 4px"><span style="color:var(--mu);font-size:11px">Смена 12 ч</span><span class="num" style="font-size:11px">Раб. <b>${f(m.workH,1)} ч</b> · Хол. <b style="color:${m.idleH>=2.5?'var(--yl)':'var(--tx)'}">${f(m.idleH,1)} ч</b>${m.downH?` · Рем. <b style="color:var(--rd)">${f(m.downH,1)} ч</b>`:''}</span></div><div class="shift-bar"><div class="sb-w" style="width:${(m.workH/12*100).toFixed(1)}%"></div><div class="sb-i" style="width:${(m.idleH/12*100).toFixed(1)}%"></div><div class="sb-d" style="width:${(m.downH/12*100).toFixed(1)}%"></div></div></div>
+      </div>
+      <div class="pass-col" style="${inModal?'padding:12px 0':''}">
+        <div class="col-lbl"><span>${isBoss()?'ТО и экономика (сутки)':'ТО и ремзона'}</span>${isBoss()?`<span class="mono">${c.rateLbl}</span>`:''}</div>
+        <div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 11px;font-size:12px"><div style="display:flex;justify-content:space-between;gap:6px"><span style="color:var(--mu)">ТО по км / моточасам</span><b class="mono" style="color:${c.toOver?'var(--rd)':(c.toUrgent?'var(--yl)':'var(--gr)')}">${m.nextToKm?`${c.toLeftKm<=0?'+'+f(Math.abs(c.toLeftKm))+' проср.':f(c.toLeftKm)+' км'} · `:''}${c.toLeftMh<=0?'+'+Math.abs(c.toLeftMh)+' м/ч':c.toLeftMh+' м/ч'}</b></div>${logs[0] ? `<div style="color:var(--tx2);margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)"><span class="mono" style="color:var(--mu)">${fmtD(logs[0].date)} · ${f(logs[0].odoKm)} км</span> — ${esc(logs[0].work)}</div>` : ''}</div>
+        ${isBoss() ? `<div class="num" style="margin-top:auto"><div class="kv-row"><span style="color:var(--mu)">Выручка</span><b style="color:var(--gr)">+${f(c.dayRev)} ₽</b></div><div class="kv-row"><span style="color:var(--mu)">ДТ на работу (${m.burnedL} л)</span><span>−${f(c.workFuelRub)} ₽</span></div>${m.slivL ? `<div class="kv-row"><span style="color:var(--rd);font-weight:700">Слив топлива (${m.slivL} л)</span><b style="color:var(--rd)">−${f(c.slivRub)} ₽</b></div>` : ''}<div class="kv-row"><span style="color:var(--mu)">ЗП + лизинг/база</span><span>−${f(m.wage + m.fix)} ₽</span></div>${c.todayRep ? `<div class="kv-row"><span style="color:var(--rd)">Ремонт сегодня</span><b style="color:var(--rd)">−${f(c.todayRep)} ₽</b></div>` : ''}<div class="kv-row tot"><span>Чистыми (сутки)</span><span style="color:${c.dayProfit>=0?'var(--gr)':'var(--rd)'}">${c.dayProfit>=0?'+':'−'}${f(Math.abs(c.dayProfit))} ₽</span></div><div class="kv-row" style="border:none;padding-top:2px;font-size:11.5px;color:var(--mu)"><span>Итог за месяц (накоп.)</span><b style="color:var(--gr)">+${f(m.monthProfit)} ₽</b></div></div>` : `<div style="margin-top:auto;display:flex;gap:7px;flex-wrap:wrap">${m.techState==='ok' ? `<button class="btn rd" style="flex:1" onclick="setTechState('${m.id}','repair')">Загнать в ремонт</button>` : `<button class="btn gr" style="flex:1" onclick="setTechState('${m.id}','ok')">✓ Выпустить на линию</button>`}<button class="btn" onclick="openAddMaint('${m.id}')">+ Запись ТО</button></div>`}
+      </div>
+    </div>
+  </div>`;
+}
+function initMap() {
+  const el = document.getElementById('live-map'); if (!el) return;
+  if (MAP_INST) { try { MAP_INST.remove(); } catch (e) {} MAP_INST = null; }
+  const sel = STATE.machines.find(m => m.id === SEL_ID) || STATE.machines[0];
+  if (typeof L === 'undefined') return;
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const url = MAP_SAT ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' : (dark ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}' : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}');
+  MAP_INST = L.map('live-map', { zoomControl: false, attributionControl: true }).setView([sel.lat, sel.lng], 11);
+  L.tileLayer(url, { maxZoom: 17, attribution: '&copy; Esri' }).addTo(MAP_INST);
+  const cols = ['#D8F33B', '#60A5FA', '#22C55E'];
+  STATE.routes.forEach((r, i) => { if (r.path) L.polyline(r.path, { color: cols[i%cols.length], weight: 2.5, opacity: .72, dashArray: '6 6' }).addTo(MAP_INST); });
+  STATE.machines.forEach(m => { const active = m.id === SEL_ID; const icon = L.divIcon({ className: '', html: `<div class="bort-pin ${active?'active':m.level}">№${esc(m.id)}</div>`, iconSize: [48, 22], iconAnchor: [24, 11] }); L.marker([m.lat, m.lng], { icon, zIndexOffset: active ? 900 : 100 }).addTo(MAP_INST).on('click', () => selectCar(m.id)); });
+}
+function go(tab) { TAB = tab; if (tab !== 'routes') OPEN_ROUTE_ID = null; render(); window.scrollTo({ top:0, behavior:'instant' }); }
+function renderChrome(probsCnt, toCnt, feedCnt) {
+  const r = ROLES[STATE.role];
+  document.getElementById('side-role-name').textContent = r.name; document.getElementById('side-role-pin').textContent = 'PIN ' + r.pin; document.getElementById('mob-role-lbl').textContent = r.short + ' ▾';
+  let items = isMech() ? [
+    { id:'to', lbl:'Ремзона и ТО', mob:'Ремзона', badge:toCnt, bCls:'yl', ico:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>' },
+    { id:'feed', lbl:'Камера и лента', mob:'Фото/Чат', badge:feedCnt, bCls:'', ico:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
+    { id:'home', lbl:'Все борта', mob:'Борта', badge:STATE.machines.length, bCls:'', ico:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>' }
+  ] : (isDisp() ? [
+    { id:'home', lbl:'Пульт штаба', mob:'Пульт', badge:probsCnt, bCls:'rd', ico:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>' },
+    { id:'routes', lbl:'Разнарядка', mob:'Маршруты', badge:STATE.routes.length, bCls:'', ico:'<circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h5a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h5"/>' },
+    { id:'feed', lbl:'Фото и чат', mob:'Фото/Чат', badge:feedCnt, bCls:'', ico:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
+    { id:'to', lbl:'ТО и ремзона', mob:'ТО', badge:toCnt, bCls:'yl', ico:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>' }
+  ] : [
+    { id:'home', lbl:'Пульт', mob:'Пульт', badge:probsCnt, bCls:'rd', ico:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>' },
+    { id:'routes', lbl:'Маршруты', mob:'Маршруты', badge:STATE.routes.length, bCls:'', ico:'<circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h5a4 4 0 0 0 0-8H10a4 4 0 0 1 0-8h5"/>' },
+    { id:'to', lbl:'ТО и ремонт', mob:'ТО', badge:toCnt, bCls:'yl', ico:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>' },
+    { id:'feed', lbl:'Лента и фото', mob:'Фото/Чат', badge:feedCnt, bCls:'', ico:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
+    { id:'fin', lbl:'Экономика', mob:'Деньги', badge:'', bCls:'', ico:'<path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-6"/>' }
+  ]);
+  if (!items.some(i => i.id === TAB)) TAB = items[0].id;
+  document.getElementById('page-title').textContent = (items.find(i => i.id === TAB)||{}).lbl || 'БОРТ';
+  document.getElementById('side-nav').innerHTML = `<div class="nav-sec">${r.name}</div>` + items.map(i => `<button class="${TAB===i.id?'on':''}" onclick="go('${i.id}')"><svg class="ico" viewBox="0 0 24 24">${i.ico}</svg>${i.lbl}${i.badge?`<span class="badge ${i.bCls}">${i.badge}</span>`:''}</button>`).join('');
+  const mnav = document.getElementById('mob-nav'); mnav.style.gridTemplateColumns = `repeat(${items.length}, 1fr)`;
+  mnav.innerHTML = items.map(i => `<button class="${TAB===i.id?'on':''}" onclick="go('${i.id}')"><svg class="ico" viewBox="0 0 24 24">${i.ico}</svg>${i.mob}</button>`).join('');
+  document.getElementById('tb-actions').innerHTML = `<button class="btn ac" onclick="openCaptureModal('${isMech()?'defect':'odo'}')">📷 Фото</button><button class="btn desk-only" onclick="openAddMaint()">+ ТО / ремонт</button><button class="btn" onclick="openSettingsModal()" aria-label="Настройки">⚙</button>`;
 }
 function render() {
-  const root = document.getElementById('root'), all = STATE.machines.map(m => ({ m, c: calc(m) }));
-  const probsCnt = STATE.machines.filter(m => m.level !== 'gr').length, toCnt = all.filter(x => x.c.toLeft <= 1500).length;
-  document.getElementById('b-prob').textContent = probsCnt; document.getElementById('b-rt').textContent = STATE.routes.length; document.getElementById('b-to').textContent = toCnt;
-  const sd = document.getElementById('side-diesel'); if (sd) sd.value = STATE.diesel;
-  const byRt = ROUTE_FILT === 'all' ? all : all.filter(x => x.m.routeId === ROUTE_FILT);
-  const list = LIGHT_FILT === 'all' ? byRt : byRt.filter(x => x.m.level === LIGHT_FILT);
-  let rev=0, out=0, prof=0, trips=0, tons=0, km=0, sliv=0, onLine=0;
-  byRt.forEach(({ m, c }) => { rev += c.rev; prof += c.profit; out += (c.rev - c.profit); trips += Number(m.trips || 0); tons += c.tons; km += Number(m.dayKm || 0); sliv += Number(m.slivL || 0); if (m.level !== 'rd') onLine++; });
+  const all = STATE.machines.map(m => ({ m, c: calc(m) })), probsCnt = STATE.machines.filter(m => m.level !== 'gr').length, toCnt = all.filter(x => x.c.toUrgent).length;
+  renderChrome(probsCnt, toCnt, STATE.feed.length);
+  const root = document.getElementById('root'), byRt = ROUTE_FILT === 'all' ? all : all.filter(x => x.m.routeId === ROUTE_FILT), list = LIGHT_FILT === 'all' ? byRt : byRt.filter(x => x.m.level === LIGHT_FILT);
+  let rev=0, prof=0, trips=0, tons=0, km=0, sliv=0, onLine=0, scaleMiss=0;
+  byRt.forEach(({ m, c }) => { rev += c.rev; prof += c.profit; trips += Number(m.trips || 0) * periodMult(); tons += c.tons; km += Number(m.dayKm || 0) * periodMult(); sliv += Number(m.slivL || 0); if (m.techState === 'ok') onLine++; if (c.scaleDiff > 0) scaleMiss += c.scaleDiff; });
   if (TAB === 'home') {
-    const selObj = all.find(x => x.m.id === SEL_ID) || (list[0] || all[0]); SEL_ID = selObj.m.id;
-    const { m, c } = selObj, logs = STATE.maint.filter(x => x.machineId === m.id);
+    const selObj = all.find(x => x.m.id === SEL_ID) || (list[0] || all[0]); SEL_ID = selObj.m.id; const { m } = selObj;
     root.innerHTML = `
+      <div class="ctrl-bar">
+        ${isBoss() ? `<div class="seg3"><button class="${STATE.period==='day'?'on':''}" onclick="STATE.period='day';saveState();render()">Сутки</button><button class="${STATE.period==='week'?'on':''}" onclick="STATE.period='week';saveState();render()">Неделя</button><button class="${STATE.period==='month'?'on':''}" onclick="STATE.period='month';saveState();render()">Месяц</button></div>` : `<div style="font-size:12px;color:var(--mu);font-weight:600">${isMech()?'Технический статус парка (без финансов)':'Оперативная сводка смены (без прибыли)'}</div>`}
+        <div class="seg3"><button class="${STATE.shift==='all'?'on':''}" onclick="STATE.shift='all';saveState();render()">Сутки</button><button class="${STATE.shift==='day'?'on':''}" onclick="STATE.shift='day';saveState();render()">День 07–19</button><button class="${STATE.shift==='night'?'on':''}" onclick="STATE.shift='night';saveState();render()">Ночь 19–07</button></div>
+      </div>
       <div class="kpis">
-        ${MECH_MODE ? `<div class="kpi hi"><div class="kpi-l"><span>Режим механика</span><span class="mono">БЕЗ ДЕНЕГ</span></div><div class="kpi-v num">${onLine} из ${byRt.length}</div><div class="kpi-s num">Бортов на линии · ${byRt.length - onLine} на рембазе</div></div>`
-        : `<div class="kpi hi"><div class="kpi-l"><span>Чистая прибыль</span><span class="mono">СУТКИ</span></div><div class="kpi-v num">${prof>=0?'+':'−'}${f(Math.abs(prof))} ₽</div><div class="kpi-s num">Выручка ${f(rev)} ₽ · Расходы ${f(out)} ₽</div></div>`}
-        <div class="kpi"><div class="kpi-l"><span>Вывезено тонн</span><span class="mono">GPS / ВЕСЫ</span></div><div class="kpi-v num">${f(tons)} т</div><div class="kpi-s num"><b style="color:var(--tx)">${f(trips)} рейсов</b> · ${STATE.routes.length} маршрута</div></div>
+        ${isBoss() ? `<div class="kpi hi"><div class="kpi-l"><span>Чистая прибыль</span><span class="mono">${STATE.period==='day'?'СУТКИ':(STATE.period==='week'?'НЕДЕЛЯ':'МЕСЯЦ')}</span></div><div class="kpi-v num">${prof>=0?'+':'−'}${f(Math.abs(prof))} ₽</div><div class="kpi-s num">Выручка ${f(rev)} ₽</div></div>` : `<div class="kpi hi"><div class="kpi-l"><span>Выпуск на линию</span><span class="mono">${ROLES[STATE.role].short.toUpperCase()}</span></div><div class="kpi-v num">${onLine} из ${byRt.length}</div><div class="kpi-s num">${byRt.length - onLine} на рембазе (заблокированы)</div></div>`}
+        <div class="kpi"><div class="kpi-l"><span>Вывезено тонн</span><span class="mono">GPS / ВЕСЫ</span></div><div class="kpi-v num">${f(tons)} т</div><div class="kpi-s num"><b>${f(trips)} р.</b>${scaleMiss?` · <span style="color:var(--yl)">весы −${scaleMiss}</span>`:''}</div></div>
         <div class="kpi"><div class="kpi-l"><span>Пробег парка</span><span class="mono">GELIOS</span></div><div class="kpi-v num">${f(km)} км</div><div class="kpi-s num"><span class="dot gr"></span>${onLine} на линии · ${byRt.length - onLine} рембаза</div></div>
-        <div class="kpi"><div class="kpi-l"><span>Топливо и ТО</span><span class="mono">ДУТ</span></div><div class="kpi-v num" style="color:${sliv?'var(--rd)':'var(--gr)'}">${sliv?`−${sliv} л`:'0 л'}</div><div class="kpi-s num">${sliv?`Слив −${f(sliv*STATE.diesel)} ₽`:'Сливов нет'} · ТО скоро: <b style="color:var(--yl)">${toCnt}</b></div></div>
+        <div class="kpi"><div class="kpi-l"><span>${isBoss()?'Потери ДТ и ТО':'Топливо и ТО'}</span><span class="mono">ДУТ + М/Ч</span></div><div class="kpi-v num" style="color:${sliv?'var(--rd)':'var(--gr)'}">${sliv?`−${sliv} л`:'0 л'}</div><div class="kpi-s num">${sliv?(isBoss()?`Слив −${f(sliv*STATE.diesel)} ₽`:'Зафиксирован слив'):'Сливов нет'} · ТО: <b style="color:var(--yl)">${toCnt}</b></div></div>
       </div>
       <div class="split">
         <div class="panel">
           <div class="panel-h">
             <div class="panel-ht"><h2>Борта (${list.length})</h2><select class="sel" style="width:auto;height:28px;font-size:11.5px;padding:0 8px" onchange="ROUTE_FILT=this.value;render()"><option value="all" ${ROUTE_FILT==='all'?'selected':''}>Все маршруты</option>${STATE.routes.map(r => `<option value="${r.id}" ${ROUTE_FILT===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div>
-            <div class="pills">
-              <button class="pill ${LIGHT_FILT==='all'?'on':''}" onclick="LIGHT_FILT='all';render()">Все ${byRt.length}</button>
-              <button class="pill ${LIGHT_FILT==='rd'?'on':''}" onclick="LIGHT_FILT='rd';render()"><span class="dot rd"></span>Тревога</button>
-              <button class="pill ${LIGHT_FILT==='yl'?'on':''}" onclick="LIGHT_FILT='yl';render()"><span class="dot yl"></span>Простой / ТО</button>
-              <button class="pill ${LIGHT_FILT==='gr'?'on':''}" onclick="LIGHT_FILT='gr';render()"><span class="dot gr"></span>Норма</button>
-            </div>
+            <div class="pills"><button class="pill ${LIGHT_FILT==='all'?'on':''}" onclick="LIGHT_FILT='all';render()">Все ${byRt.length}</button><button class="pill ${LIGHT_FILT==='rd'?'on':''}" onclick="LIGHT_FILT='rd';render()"><span class="dot rd"></span>Тревога</button><button class="pill ${LIGHT_FILT==='yl'?'on':''}" onclick="LIGHT_FILT='yl';render()"><span class="dot yl"></span>ТО / Хол.</button><button class="pill ${LIGHT_FILT==='gr'?'on':''}" onclick="LIGHT_FILT='gr';render()"><span class="dot gr"></span>Норма</button></div>
           </div>
-          <div class="fleet-list">
-            ${list.map(({ m: car, c: cc }) => `
-              <div class="f-item ${car.id===SEL_ID?'active':''}" onclick="selectCar('${car.id}')">
-                <div class="fi-top"><div class="fi-name"><span class="dot ${car.level}"></span>${esc(car.name)}</div><span class="fi-plate mono">${esc(car.plate)}</span></div>
-                <div class="fi-sub"><span>${esc(car.driver)} · ${esc(cc.rt.name.split('→')[0].trim())}</span><span class="mono">${car.tankNow} л</span></div>
-                <div class="fi-bot num">
-                  ${car.level !== 'gr' ? `<span class="fi-alert ${car.level}">${esc(car.status)}</span>` : `<div class="fi-metrics"><span>${car.trips} р.</span><span>${f(cc.tons)} т</span><span>${f(car.dayKm)} км</span></div>`}
-                  ${MECH_MODE ? `<span class="mono" style="color:var(--mu)">${f(car.odoKm)} км</span>` : `<b style="color:${cc.profit>=0?'var(--gr)':'var(--rd)'}">${cc.profit>=0?'+':'−'}${f(Math.abs(cc.profit))} ₽</b>`}
-                </div>
-              </div>`).join('')}
-          </div>
+          <div class="fleet-list">${list.map(({ m: car, c: cc }) => `<div class="f-item ${car.id===SEL_ID?'active':''}" onclick="selectCar('${car.id}')"><div class="fi-top"><div class="fi-name"><span class="dot ${car.level}"></span>${esc(car.name)}</div><span class="fi-plate mono">${esc(car.plate)}</span></div><div class="fi-sub"><span>${esc(curDriver(car))} · ${esc(cc.rt.name.split('→')[0].trim())}</span><span class="mono">${car.tankNow} л</span></div><div class="fi-bot num">${car.level !== 'gr' ? `<span class="fi-alert ${car.level}">${esc(car.status)}</span>` : `<div class="fi-metrics">${cc.isExc?`<span>${f(car.workH,1)} м/ч</span>`:`<span>${car.trips} р.</span><span>${f(cc.dayTons)} т</span><span>${f(car.dayKm)} км</span>`}</div>`}${isBoss() ? `<b style="color:${cc.dayProfit>=0?'var(--gr)':'var(--rd)'}">${cc.dayProfit>=0?'+':'−'}${f(Math.abs(cc.dayProfit))} ₽</b>` : `<span class="mono" style="color:var(--mu)">${f(car.mh)} м/ч</span>`}</div></div>`).join('')}</div>
         </div>
-        <div class="stage">
+        <div class="stage mob-hidden">
           <div class="map-wrap">
             <div id="live-map"></div>
-            <div class="map-hud">
-              <div class="hud-kv"><span>Борт</span><b>${esc(m.name)}</b></div><div class="hud-sep"></div>
-              <div class="hud-kv"><span>Скорость</span><b class="mono">${m.speed} км/ч</b></div><div class="hud-sep"></div>
-              <div class="hud-kv"><span>Бак ДУТ</span><b class="mono" style="color:${m.slivL?'var(--rd)':'var(--tx)'}">${m.tankNow} / ${m.tankCap} л</b></div><div class="hud-sep"></div>
-              <div class="hud-kv"><span>Маршрут</span><b>${esc(c.rt.name)}</b></div>
-            </div>
-            <div class="map-legend"><span><span class="dot gr"></span>В работе</span><span><span class="dot yl"></span>Холостой / ТО</span><span><span class="dot rd"></span>Слив / рембаза</span></div>
-            <button class="btn" style="position:absolute;bottom:10px;right:10px;z-index:400;height:28px;font-size:11px;background:var(--glass);backdrop-filter:blur(10px)" onclick="MAP_SAT=!MAP_SAT;initMap();this.textContent=MAP_SAT?'Схема':'Спутник'">${MAP_SAT?'Схема':'Спутник'}</button>
+            <div class="map-hud"><div class="hud-kv"><span>Борт</span><b>${esc(m.name)}</b></div><div class="hud-sep"></div><div class="hud-kv"><span>Скорость</span><b class="mono">${m.speed} км/ч</b></div><div class="hud-sep"></div><div class="hud-kv"><span>Бак ДУТ</span><b class="mono" style="color:${m.slivL?'var(--rd)':'var(--tx)'}">${m.tankNow}/${m.tankCap} л</b></div><div class="hud-sep"></div><div class="hud-kv"><span>Водитель</span><b>${esc(curDriver(m))}</b></div></div>
+            <div class="map-legend"><span><span class="dot gr"></span>Работа</span><span><span class="dot yl"></span>ТО/Хол.</span><span><span class="dot rd"></span>Слив/Рем.</span></div>
+            <button class="btn sm" style="position:absolute;bottom:10px;right:10px;z-index:20;background:var(--glass)" onclick="MAP_SAT=!MAP_SAT;initMap();this.textContent=MAP_SAT?'Схема':'Спутник'">${MAP_SAT?'Схема':'Спутник'}</button>
           </div>
-          <div class="passport">
-            <div class="pass-h">
-              <div class="pass-title"><h3>${esc(m.name)}</h3><span class="fi-plate mono" style="font-size:11.5px">${esc(m.plate)}</span><span class="status-chip ${m.level}"><span class="dot ${m.level}"></span>${esc(m.status)}</span></div>
-              <button class="btn" onclick="openAddMaint('${m.id}')">+ Записать ТО / ремонт</button>
-            </div>
-            <div class="pass-top-band">
-              <div class="pass-col">
-                <div class="col-lbl"><span>Телеметрия борта</span><span class="mono">ОДОМЕТР ${f(m.odoKm)} КМ</span></div>
-                <div class="cad-stage"><div class="cad-tags mono"><span>${esc(m.driver)}</span><span>${c.rateLbl}</span></div>${truckCadSvg(m, c)}</div>
-              </div>
-              <div class="pass-col" style="justify-content:space-between">
-                <div class="col-lbl"><span>Топливо в баке (ДУТ)</span><span class="mono">${m.tankNow} / ${m.tankCap} Л</span></div>
-                <div class="gauge-box">
-                  <div class="gauge-top num"><span style="color:var(--mu)">Остаток ${c.tankPct}%</span><b>Сжёг за сутки: ${m.burnedL} л</b></div>
-                  <div class="gauge-bar"><div class="gauge-fill ${c.tankPct<30?'low':''}" style="width:${c.tankPct}%"></div>${m.slivL ? `<div class="gauge-loss" style="width:${Math.max(12, c.slivPct)}%"></div>` : ''}</div>
-                  <div class="gauge-ticks mono"><span>0</span><span>¼</span><span>½</span><span>¾</span><span>F (${m.tankCap} л)</span></div>
-                </div>
-                ${m.slivL ? `<div style="font-size:12px;color:var(--rd);font-weight:700;padding:8px 10px;border-radius:8px;background:var(--rd-s)">Слив −${m.slivL} л (−${f(c.slivRub)} ₽) · 03:14, стоянка промзоны</div>` : `<div style="font-size:12px;color:var(--tx2);padding:8px 10px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)">${esc(m.note)}</div>`}
-              </div>
-            </div>
-            <div class="pass-grid">
-              <div class="pass-col">
-                <div class="col-lbl"><span>Выработка и тоннаж · сутки</span><span class="mono">${c.tonsSrc}</span></div>
-                <div class="m3 num"><div class="m3-box"><span>Рейсы (GPS)</span><b>${m.trips}</b></div><div class="m3-box"><span>Тоннаж</span><b style="color:var(--ac)">${f(c.tons)} т</b></div><div class="m3-box"><span>Пробег</span><b>${f(m.dayKm)} км</b></div></div>
-                <div><div class="flbl">Источник тоннажа</div><div class="seg"><button class="${m.tonMode==='auto'?'on':''}" onclick="updCar('${m.id}','tonMode','auto')">Кузов × рейсы</button><button class="${m.tonMode==='manual'?'on':''}" onclick="updCar('${m.id}','tonMode','manual')">Факт по весам</button></div></div>
-                <div class="f2">
-                  <div><label class="flbl">Средний кузов (т)</label><input type="number" class="inp num" value="${m.capTon}" onchange="updCar('${m.id}','capTon',+this.value||25)" /></div>
-                  <div><label class="flbl">${m.tonMode==='manual'?'Тонны с весов':'Рейсов за сутки'}</label>${m.tonMode==='manual'?`<input type="number" class="inp num" value="${m.manualTons}" onchange="updCar('${m.id}','manualTons',+this.value||0)" />`:`<input type="number" class="inp num" value="${m.trips}" onchange="updCar('${m.id}','trips',+this.value||0)" />`}</div>
-                </div>
-                <div class="f2">
-                  <div><label class="flbl">Маршрут</label><select class="sel" onchange="updCar('${m.id}','routeId',this.value)">${STATE.routes.map(r => `<option value="${r.id}" ${r.id===m.routeId?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div>
-                  <div><label class="flbl">Водитель</label><input class="inp" value="${esc(m.driver)}" onchange="updCar('${m.id}','driver',this.value)" /></div>
-                </div>
-                <div>
-                  <div class="kv-row" style="border:none;padding:0 0 5px"><span style="color:var(--mu);font-size:11.5px">Смена 12 ч</span><span class="num" style="font-size:11.5px">Работа <b>${f(m.workH,1)} ч</b> · Хол. <b style="color:${m.idleH>=2.5?'var(--yl)':'var(--tx)'}">${f(m.idleH,1)} ч</b></span></div>
-                  <div class="shift-bar"><div class="sb-w" style="width:${(m.workH/12*100).toFixed(1)}%"></div><div class="sb-i" style="width:${(m.idleH/12*100).toFixed(1)}%"></div><div class="sb-d" style="width:${(m.downH/12*100).toFixed(1)}%"></div></div>
-                </div>
-              </div>
-              <div class="pass-col">
-                <div class="col-lbl"><span>ТО, ремонты и экономика</span><span class="mono">${c.rateLbl}</span></div>
-                <div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px">
-                  <div style="display:flex;justify-content:space-between;font-size:12.5px"><span style="color:var(--mu)">До планового ТО</span><b class="mono" style="color:${c.toLeft<=0?'var(--rd)':(c.toLeft<=1500?'var(--yl)':'var(--gr)')}">${c.toLeft<=0?`+${f(Math.abs(c.toLeft))} км просрочка`:`${f(c.toLeft)} км`}</b></div>
-                  ${logs[0] ? `<div style="font-size:12px;color:var(--tx2);margin-top:7px;padding-top:7px;border-top:1px solid var(--bd)"><span class="mono" style="color:var(--mu)">${fmtD(logs[0].date)} · ${f(logs[0].odoKm)} км</span><br/>${esc(logs[0].work)} ${logs[0].cost?`<b>(${f(logs[0].cost)} ₽)</b>`:''}</div>` : ''}
-                </div>
-                ${MECH_MODE ? `<div style="margin-top:auto;font-size:12px;color:var(--mu);padding:10px 12px;border-radius:9px;background:var(--s2);border:1px solid var(--bd)">Финансовые показатели скрыты в режиме механика. Доступно: направления, водители, тоннаж и журнал ТО.</div>` : `<div class="num" style="margin-top:auto">
-                  <div class="kv-row"><span style="color:var(--mu)">Выручка (${c.rt.mode==='ton'?`${f(c.tons)} т`:`${m.trips} р.`})</span><b style="color:var(--gr)">+${f(c.rev)} ₽</b></div>
-                  <div class="kv-row"><span style="color:var(--mu)">Топливо (${c.totalFuelL} л × ${STATE.diesel} ₽)</span><span>−${f(c.fuelRub)} ₽</span></div>
-                  <div class="kv-row"><span style="color:var(--mu)">Водитель + база</span><span>−${f(m.wage + m.fix)} ₽</span></div>
-                  ${c.todayRep ? `<div class="kv-row"><span style="color:var(--rd)">Ремонт сегодня</span><b style="color:var(--rd)">−${f(c.todayRep)} ₽</b></div>` : ''}
-                  <div class="kv-row tot"><span>Чистыми за сутки</span><span style="color:${c.profit>=0?'var(--gr)':'var(--rd)'}">${c.profit>=0?'+':'−'}${f(Math.abs(c.profit))} ₽</span></div>
-                </div>`}
-              </div>
-            </div>
-          </div>
+          ${passportHtml(m, false)}
         </div>
       </div>`;
-    setTimeout(initMap, 10);
+    if (!isMob()) setTimeout(initMap, 15);
   } else if (TAB === 'routes') {
+    const freeDrivers = STATE.drivers.filter(d => d.state === 'free');
     if (OPEN_ROUTE_ID) {
-      const r = getRoute(OPEN_ROUTE_ID), onR = STATE.machines.filter(m => m.routeId === r.id), offR = STATE.machines.filter(m => m.routeId !== r.id);
-      const rTons = onR.reduce((s, m) => s + calc(m).tons, 0), rRev = onR.reduce((s, m) => s + calc(m).rev, 0);
+      const r = getRoute(OPEN_ROUTE_ID), onR = STATE.machines.filter(m => m.routeId === r.id), avail = STATE.machines.filter(m => m.routeId !== r.id && m.techState === 'ok'), blocked = STATE.machines.filter(m => m.techState !== 'ok');
+      const rTons = onR.reduce((s, m) => s + calc(m).dayTons, 0), rRev = onR.reduce((s, m) => s + calc(m).dayRev, 0);
       root.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><button class="btn" onclick="OPEN_ROUTE_ID=null;render()">← Ко всем маршрутам</button><button class="btn rd" onclick="delRoute('${r.id}')">Удалить маршрут</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><button class="btn" onclick="OPEN_ROUTE_ID=null;render()">← Все маршруты</button><span class="fi-plate mono">План: ${r.planCars} · Факт: ${onR.filter(x=>x.techState==='ok').length}</span></div>
         <div class="grid2">
           <div class="card">
-            <div class="card-h"><h3>Параметры маршрута</h3><span class="mono" style="color:var(--ac)">${f(rTons)} т · +${f(rRev)} ₽</span></div>
+            <div class="card-h"><h3>Параметры маршрута</h3>${isBoss()?`<span class="mono" style="color:var(--ac)">${f(rTons)} т · +${f(rRev)} ₽</span>`:`<span class="mono">${f(rTons)} т</span>`}</div>
             <div><label class="flbl">Название направления</label><input class="inp" value="${esc(r.name)}" onchange="updRoute('${r.id}','name',this.value);toast('Название обновлено')" /></div>
-            <div class="f2">
-              <div><label class="flbl">Тип тарифа</label><select class="sel" onchange="updRoute('${r.id}','mode',this.value);toast('Тариф обновлён')"><option value="ton" ${r.mode==='ton'?'selected':''}>За тонну (₽/т)</option><option value="trip" ${r.mode==='trip'?'selected':''}>За рейс (₽/рейс)</option><option value="km" ${r.mode==='km'?'selected':''}>За километр (₽/км)</option></select></div>
-              <div><label class="flbl">Ставка (₽)</label><input type="number" class="inp num" value="${r.rate}" onchange="updRoute('${r.id}','rate',+this.value||0);toast('Ставка обновлена')" /></div>
-            </div>
-            <div><label class="flbl">Длина плеча (км на рейс)</label><input type="number" class="inp num" value="${r.legKm}" onchange="updRoute('${r.id}','legKm',+this.value||10)" /></div>
+            ${isBoss() ? `<div class="f2"><div><label class="flbl">Тип оплаты</label><select class="sel" onchange="updRoute('${r.id}','mode',this.value)"><option value="ton" ${r.mode==='ton'?'selected':''}>₽ за тонну</option><option value="trip" ${r.mode==='trip'?'selected':''}>₽ за рейс</option><option value="km" ${r.mode==='km'?'selected':''}>₽ за км</option></select></div><div><label class="flbl">Ставка (₽)</label><input type="number" class="inp num" value="${r.rate}" onchange="updRoute('${r.id}','rate',+this.value||0)" /></div></div>` : `<div style="font-size:12px;color:var(--mu)">Тарифы заказчика скрыты для роли «${ROLES[STATE.role].name}».</div>`}
+            <div class="f2"><div><label class="flbl">Круг туда-обратно (км)</label><input type="number" class="inp num" value="${r.legKm}" onchange="updRoute('${r.id}','legKm',+this.value||10)" /></div><div><label class="flbl">План бортов на смену</label><input type="number" class="inp num" value="${r.planCars}" onchange="updRoute('${r.id}','planCars',+this.value||2)" /></div></div>
           </div>
           <div class="card">
-            <div class="card-h"><h3>Назначить борт на маршрут</h3></div>
-            ${offR.length ? `<div style="display:flex;flex-direction:column;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--bd)"><div class="f2"><div><label class="flbl">Борт из парка</label><select class="sel" id="as-car" onchange="syncAssignDrv()">${offR.map(m => `<option value="${m.id}">${esc(m.name)} (${esc(m.plate)})</option>`).join('')}</select></div><div><label class="flbl">Фамилия водителя</label><input class="inp" id="as-drv" value="${esc(offR[0].driver)}" /></div></div><button class="btn ac" onclick="assignCar('${r.id}')">Поставить на этот маршрут</button></div>` : ''}
-            <div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:12px;font-weight:700;color:var(--mu)">Или завести новый борт</div><div class="f2"><input class="inp" id="nc-name" placeholder="Марка и номер (SHACMAN №21)" /><input class="inp" id="nc-plate" placeholder="Госномер (Е 555 КХ 42)" /><input class="inp" id="nc-drv" placeholder="Фамилия водителя" /><input type="number" class="inp num" id="nc-cap" value="25" placeholder="Кузов, т" /></div><button class="btn" onclick="createCarOnRoute('${r.id}')">+ Создать борт и добавить сюда</button></div>
+            <div class="card-h"><h3>Поставить борт на маршрут</h3><span class="fi-plate">Резерв водителей: ${freeDrivers.length}</span></div>
+            ${avail.length ? `<div class="f2"><div><label class="flbl">Исправный борт</label><select class="sel" id="as-car">${avail.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join('')}</select></div><div><label class="flbl">Водитель из списка</label><select class="sel" id="as-drv">${STATE.drivers.map(d => `<option value="${esc(d.name)}">${esc(d.name)}${d.state==='free'?' · РЕЗЕРВ':(d.state==='off'?' · выходной':'')}</option>`).join('')}</select></div></div><button class="btn ac lg" onclick="assignCar('${r.id}')">Поставить на направление</button>` : `<div style="color:var(--mu);font-size:12.5px">Все исправные борта уже на этом маршруте.</div>`}
+            ${blocked.length ? `<div style="font-size:11.5px;color:var(--rd);background:var(--rd-s);padding:8px 10px;border-radius:8px">Заблокированы ремзоной (нельзя выпустить): ${blocked.map(b=>`<b>${esc(b.name)}</b>`).join(', ')}</div>` : ''}
           </div>
         </div>
-        <div class="card">
-          <div class="card-h"><h3>Борта и водители на этом маршруте (${onR.length})</h3><span style="font-size:12px;color:var(--mu)">Изменения сразу пересчитывают пульт</span></div>
-          ${onR.length ? `<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Борт</th><th>Госномер</th><th>Водитель на маршруте</th><th class="r">Кузов, т</th><th class="r">Рейсы</th><th class="r">Тоннаж</th><th class="r">Выручка</th></tr></thead><tbody class="num">${onR.map(m => { const cc = calc(m); return `<tr><td><b>${esc(m.name)}</b></td><td class="mono" style="color:var(--mu)">${esc(m.plate)}</td><td><input class="inp" style="height:28px;min-width:130px" value="${esc(m.driver)}" onchange="updCar('${m.id}','driver',this.value)" /></td><td class="r"><input type="number" class="inp num" style="height:28px;width:66px;text-align:right" value="${m.capTon}" onchange="updCar('${m.id}','capTon',+this.value||25)" /></td><td class="r">${m.trips}</td><td class="r"><b>${f(cc.tons)} т</b></td><td class="r" style="color:var(--gr);font-weight:700">+${f(cc.rev)} ₽</td></tr>`; }).join('')}</tbody></table></div>` : `<div style="color:var(--mu)">На этот маршрут ещё не назначены машины.</div>`}
-        </div>`;
+        <div class="card"><div class="card-h"><h3>Борта на маршруте (${onR.length})</h3></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Борт</th><th>Статус</th><th>Водитель (день)</th><th class="r">Кузов, т</th><th class="r">GPS / Весы</th><th class="r">Тоннаж</th>${isBoss()?'<th class="r">Выручка</th>':''}</tr></thead><tbody class="num">${onR.map(m => { const cc = calc(m); return `<tr><td><b>${esc(m.name)}</b></td><td><span class="status-chip ${m.level}">${esc(m.status)}</span></td><td><select class="sel" style="height:28px;min-width:130px" onchange="updCar('${m.id}','drvDay',this.value)">${STATE.drivers.map(d=>`<option value="${esc(d.name)}" ${d.name===m.drvDay?'selected':''}>${esc(d.name)}</option>`).join('')}</select></td><td class="r"><input type="number" class="inp num" style="height:28px;width:62px;text-align:right" value="${m.capTon}" onchange="updCar('${m.id}','capTon',+this.value||25)" /></td><td class="r">${m.gpsTrips} / <b style="color:${cc.scaleDiff?'var(--yl)':'var(--gr)'}">${m.scaleTrips}</b></td><td class="r"><b>${f(cc.dayTons)} т</b></td>${isBoss()?`<td class="r" style="color:var(--gr);font-weight:700">+${f(cc.dayRev)} ₽</td>`:''}</tr>`; }).join('')}</tbody></table></div></div>`;
     } else {
-      root.innerHTML = `
-        <div class="card-h"><div><h3>Направления и маршруты (${STATE.routes.length})</h3><div style="font-size:12px;color:var(--mu);margin-top:2px">Нажми на любой маршрут — внутри смена названия, цены, машин и водителей</div></div><div style="display:flex;gap:8px"><button class="btn lg" onclick="openCloudModal()">Облако / Excel</button><button class="btn ac lg" onclick="addNewRoute()">+ Добавить маршрут</button></div></div>
-        <div class="grid2">${STATE.routes.map((r, i) => { const cars = STATE.machines.filter(m => m.routeId === r.id), rTons = cars.reduce((s, m) => s + calc(m).tons, 0), rRev = cars.reduce((s, m) => s + calc(m).rev, 0), rl = r.mode==='ton'?`${f(r.rate)} ₽/т`:(r.mode==='trip'?`${f(r.rate)} ₽/рейс`:`${f(r.rate)} ₽/км`); return `<div class="rt-item" onclick="OPEN_ROUTE_ID='${r.id}';render()"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div class="mono" style="font-size:10.5px;color:var(--mu);text-transform:uppercase">Маршрут 0${i+1} · плечо ${r.legKm} км</div><div style="font-size:15px;font-weight:700;margin-top:3px">${esc(r.name)}</div></div><div class="rt-rate mono">${rl}</div></div><div style="display:flex;gap:14px;font-size:12px;color:var(--mu)" class="num"><span>Бортов: <b style="color:var(--tx)">${cars.length}</b></span><span>Вывезено: <b style="color:var(--tx)">${f(rTons)} т</b></span><span>Выручка: <b style="color:var(--gr)">+${f(rRev)} ₽</b></span></div><div style="display:flex;gap:5px;flex-wrap:wrap">${cars.map(m => `<span class="fi-plate">${esc(m.name.split(' ')[0])} №${m.id} · ${esc(m.driver)}</span>`).join('')}</div></div>`; }).join('')}</div>`;
+      root.innerHTML = `<div class="card-h"><div><h3>Направления и разнарядка (${STATE.routes.length})</h3><div style="font-size:12px;color:var(--mu)">Нажми на маршрут — смена названия, машин, водителей и контроль некомплекта</div></div><div style="display:flex;gap:7px"><button class="btn" onclick="openCloudModal()">Облако / Excel</button><button class="btn ac" onclick="addNewRoute()">+ Маршрут</button></div></div><div class="grid2">${STATE.routes.map((r, i) => { const cars = STATE.machines.filter(m => m.routeId === r.id), liveCars = cars.filter(m => m.techState === 'ok').length, deficit = Math.max(0, (r.planCars || 2) - liveCars), rTons = cars.reduce((s, m) => s + calc(m).dayTons, 0), rRev = cars.reduce((s, m) => s + calc(m).dayRev, 0), rl = r.mode==='ton'?`${f(r.rate)} ₽/т`:(r.mode==='trip'?`${f(r.rate)} ₽/рейс`:`${f(r.rate)} ₽/км`); return `<div class="rt-item" onclick="OPEN_ROUTE_ID='${r.id}';render()"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div class="mono" style="font-size:10.5px;color:var(--mu)">МАРШРУТ 0${i+1} · КРУГ ${r.legKm} КМ</div><div style="font-size:15px;font-weight:700;margin-top:2px">${esc(r.name)}</div></div>${isBoss()?`<div class="rt-rate mono">${rl}</div>`:`<span class="status-chip ${deficit?'yl':'gr'}">${deficit?`Некомплект −${deficit}`:`Укомплектован (${liveCars}/${r.planCars})`}</span>`}</div><div style="display:flex;gap:14px;font-size:12px;color:var(--mu)" class="num"><span>На линии: <b style="color:var(--tx)">${liveCars} из ${r.planCars}</b></span><span>Тоннаж: <b style="color:var(--tx)">${f(rTons)} т</b></span>${isBoss()?`<span>Выручка: <b style="color:var(--gr)">+${f(rRev)} ₽</b></span>`:''}</div><div style="display:flex;gap:5px;flex-wrap:wrap">${cars.map(m => `<span class="fi-plate" style="${m.techState!=='ok'?'color:var(--rd)':''}">${m.techState!=='ok'?'🔒 ':''}№${m.id} · ${esc(m.drvDay)}</span>`).join('')}</div></div>`; }).join('')}</div>`;
     }
   } else if (TAB === 'to') {
-    const mCost = STATE.maint.reduce((s, x) => s + Number(x.cost || 0), 0), logs = TO_FILT === 'all' ? STATE.maint : STATE.maint.filter(x => x.machineId === TO_FILT);
+    const inRep = STATE.machines.filter(m => m.techState !== 'ok'), mCost = STATE.maint.reduce((s, x) => s + Number(x.cost || 0), 0), logs = TO_FILT === 'all' ? STATE.maint : STATE.maint.filter(x => x.machineId === TO_FILT);
     root.innerHTML = `
-      <div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><div class="kpi-l"><span>Требуют ТО (&lt;1 500 км)</span></div><div class="kpi-v num" style="color:var(--yl)">${toCnt} борта</div><div class="kpi-s">по пробегу Gelios</div></div><div class="kpi"><div class="kpi-l"><span>На рембазе сейчас</span></div><div class="kpi-v num" style="color:var(--rd)">${STATE.machines.filter(m=>m.level==='rd').length} борта</div><div class="kpi-s">рессора, турбина</div></div><div class="kpi"><div class="kpi-l"><span>Затраты на ТО и ремонт</span></div><div class="kpi-v num">${f(mCost)} ₽</div><div class="kpi-s">по журналу работ</div></div></div>
-      <div class="card"><div class="card-h"><h3>Регламент плановых ТО</h3><button class="btn ac" onclick="openAddMaint()">+ Записать ТО / ремонт</button></div><div class="grid2">${all.slice().sort((a,b) => a.c.toLeft - b.c.toLeft).map(({ m, c }) => { const pct = Math.min(100, Math.max(8, Math.round((15000 - c.toLeft) / 15000 * 100))), col = c.toLeft <= 0 ? 'var(--rd)' : (c.toLeft <= 1500 ? 'var(--yl)' : 'var(--gr)'); return `<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:11px 13px;cursor:pointer" onclick="SEL_ID='${m.id}';go('home')"><div style="display:flex;justify-content:space-between;font-size:12.5px"><b>${esc(m.name)}</b><b class="mono" style="color:${col}">${c.toLeft<=0?`+${f(Math.abs(c.toLeft))} км просрочка`:`через ${f(c.toLeft)} км`}</b></div><div class="mono" style="font-size:11px;color:var(--mu);margin-top:3px">Одометр ${f(m.odoKm)} км · план ТО на ${f(m.nextToKm)} км</div><div style="height:4px;border-radius:2px;background:var(--s3);margin-top:8px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col}"></div></div></div>`; }).join('')}</div></div>
-      <div class="card"><div class="card-h"><h3>Журнал ремонтов и замен (${logs.length})</h3><select class="sel" style="width:auto;min-width:190px" onchange="TO_FILT=this.value;render()"><option value="all" ${TO_FILT==='all'?'selected':''}>Все борта</option>${STATE.machines.map(m => `<option value="${m.id}" ${TO_FILT===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Дата</th><th>Борт</th><th class="r">Пробег</th><th>Тип</th><th>Выполненные работы / замена</th><th class="r">Сумма</th><th></th></tr></thead><tbody class="num">${logs.map(l => { const car = STATE.machines.find(x => x.id === l.machineId) || { name:'№'+l.machineId }; return `<tr><td class="mono">${fmtD(l.date)}</td><td><b>${esc(car.name)}</b></td><td class="r mono">${f(l.odoKm)} км</td><td><span class="status-chip ${l.type==='to'?'gr':'yl'}">${l.type==='to'?'ТО':'Ремонт'}</span></td><td style="white-space:normal;min-width:220px">${esc(l.work)}</td><td class="r"><b>${l.cost?f(l.cost)+' ₽':'—'}</b></td><td class="r"><button class="btn" style="height:26px;font-size:11px" onclick="delMaint('${l.id}')">✕</button></td></tr>`; }).join('')}</tbody></table></div></div>`;
-  } else if (TAB === 'fin') {
-    root.innerHTML = `<div class="card"><div class="card-h"><div><h3>Экономика по каждому борту · сутки</h3><div style="font-size:12px;color:var(--mu)">Дизель ${STATE.diesel} ₽/л · нажми на строку, чтобы открыть борт на пульте</div></div><button class="btn" onclick="exportCsv()">Выгрузить Excel</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Борт</th><th>Маршрут</th><th class="r">Рейсы</th><th class="r">Тоннаж</th><th class="r">Пробег</th><th class="r">ДТ, л</th><th class="r">Выручка</th><th class="r">Расходы</th><th class="r">Чистыми</th></tr></thead><tbody class="num">${all.map(({ m, c }) => `<tr style="cursor:pointer" onclick="SEL_ID='${m.id}';go('home')"><td><b>${esc(m.name)}</b> <span style="color:var(--mu);font-size:11px">${esc(m.driver)}</span></td><td style="color:var(--tx2)">${esc(c.rt.name)}</td><td class="r">${m.trips}</td><td class="r"><b>${f(c.tons)} т</b> <span style="font-size:10.5px;color:var(--mu)">(${c.tonsSrc})</span></td><td class="r">${f(m.dayKm)} км</td><td class="r" style="color:${m.slivL?'var(--rd)':'var(--tx)'}">${c.totalFuelL}${m.slivL?` (−${m.slivL})`:''}</td><td class="r">${f(c.rev)} ₽</td><td class="r" style="color:var(--mu)">−${f(c.rev - c.profit)} ₽</td><td class="r" style="font-weight:700;color:${c.profit>=0?'var(--gr)':'var(--rd)'}">${c.profit>=0?'+':'−'}${f(Math.abs(c.profit))} ₽</td></tr>`).join('')}</tbody></table></div></div>`;
-  } else if (TAB === 'tg') {
-    const sl = all.filter(x => x.m.slivL > 0), rep = STATE.maint.filter(x => x.today), toSoon = all.filter(x => x.c.toLeft <= 1500);
-    const txt = [`БОРТ · Сводка за сутки (25.11)`,``,`Чистая прибыль: ${prof>=0?'+':'−'}${f(Math.abs(prof))} ₽`,`Выручка ${f(rev)} ₽ · Расходы ${f(out)} ₽`,`Выработка: ${f(trips)} рейсов · ${f(tons)} т · ${f(km)} км`,``,`Требуют внимания:`,...sl.map(x => `— Слив ДТ: ${x.m.name} (${x.m.driver}) −${x.m.slivL} л (−${f(x.c.slivRub)} ₽)`),...rep.map(l => { const car = STATE.machines.find(x => x.id === l.machineId); return `— Ремонт: ${car?car.name:l.machineId} (${f(l.odoKm)} км) · ${l.work} (${f(l.cost)} ₽)`; }),...toSoon.map(x => `— ТО: ${x.m.name} · ${x.c.toLeft<=0?`просрочка +${f(Math.abs(x.c.toLeft))} км`:`осталось ${f(x.c.toLeft)} км`}`)].join('\n');
-    root.innerHTML = `<div class="tg-shell"><div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--bd)"><div class="logo-mark" style="border-radius:50%"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg></div><div><b>БОРТ · Telegram</b><div style="font-size:11.5px;color:var(--gr)">Автоотправка ежедневно в 07:00</div></div></div><div class="tg-bub num">${esc(txt)}</div>${TG_EXTRA}<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><button class="btn" onclick="tgAsk('rt')">По маршрутам</button><button class="btn" onclick="tgAsk('to')">Кому на ТО?</button><button class="btn" onclick="tgAsk('sliv')">Сливы ДТ</button><button class="btn" onclick="TG_EXTRA='';render()">Очистить</button></div></div>`;
+      <div class="cap-grid"><button class="cap-btn hi" onclick="openCaptureModal('defect')"><b>📷 Сфоткать поломку / чек</b><span>15 сек · сразу в ремзону и ленту</span></button><button class="cap-btn" onclick="openCaptureModal('odo')"><b>📷 Сфоткать одометр</b><span>Обновит пробег и м/ч по фото</span></button><button class="cap-btn" onclick="openAddMaint()"><b>🔧 Записать ТО / ремонт</b><span>Сбросит счётчик км и моточасов</span></button></div>
+      <div class="kpis" style="grid-template-columns:repeat(${isBoss()?3:2},1fr)"><div class="kpi"><div class="kpi-l"><span>На яме / ждут запчасть</span></div><div class="kpi-v num" style="color:var(--rd)">${inRep.length} борта</div><div class="kpi-s">заблокированы у диспетчера</div></div><div class="kpi"><div class="kpi-l"><span>Пора на ТО (км или м/ч)</span></div><div class="kpi-v num" style="color:var(--yl)">${toCnt} борта</div><div class="kpi-s">масло / фильтры / шприцовка</div></div>${isBoss()?`<div class="kpi"><div class="kpi-l"><span>Затраты на ремонты</span></div><div class="kpi-v num">${f(mCost)} ₽</div><div class="kpi-s">по журналу и накладным</div></div>`:''}</div>
+      <div class="card"><div class="card-h"><h3>Ремзона сейчас (${inRep.length})</h3><span style="font-size:12px;color:var(--mu)">Крупные кнопки под грязные пальцы</span></div>${inRep.length ? `<div class="grid2">${inRep.map(m => `<div class="mech-card red"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><div><b>${esc(m.name)}</b> <span class="fi-plate mono">${esc(m.plate)}</span><div style="font-size:12px;color:var(--mu);margin-top:3px">Водитель: ${esc(m.drvDay)} · ${f(m.odoKm)} км · ${f(m.mh)} м/ч</div></div><span class="status-chip rd">${m.techState==='parts'?'Ждёт запчасть':'В работе'}</span></div><div style="font-size:12.5px;color:var(--tx2);background:var(--s2);padding:8px 10px;border-radius:8px">${esc(m.partWait || m.status)}</div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn gr lg" style="flex:1" onclick="setTechState('${m.id}','ok')">✓ Выпустить на линию</button><button class="btn lg" onclick="setTechState('${m.id}','${m.techState==='parts'?'repair':'parts'}')">${m.techState==='parts'?'Запчасть пришла':'Ждём деталь'}</button></div></div>`).join('')}</div>` : `<div style="color:var(--gr);font-weight:600">Все борта исправны и допущены на линию.</div>`}</div>
+      <div class="card"><div class="card-h"><h3>Регламент ТО (что раньше: км или моточасы м/ч)</h3></div><div class="grid2">${all.slice().sort((a,b) => Math.min(a.c.toLeftMh*50, a.c.toLeftKm) - Math.min(b.c.toLeftMh*50, b.c.toLeftKm)).map(({ m, c }) => { const col = c.toOver ? 'var(--rd)' : (c.toUrgent ? 'var(--yl)' : 'var(--gr)'), pct = Math.min(100, Math.max(10, Math.round((300 - c.toLeftMh) / 300 * 100))); return `<div class="mech-card ${c.toOver?'red':(c.toUrgent?'yel':'')}" style="padding:12px 13px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>${esc(m.name)}</b><b class="mono" style="font-size:12px;color:${col}">${c.toLeftMh<=0?`+${Math.abs(c.toLeftMh)} м/ч проср.`:`через ${c.toLeftMh} м/ч`}</b></div><div class="mono" style="font-size:11px;color:var(--mu)">${m.nextToKm?`Пробег ${f(m.odoKm)} / ${f(m.nextToKm)} км · `:''}Моточасы ${f(m.mh)} / ${f(m.nextToMh)}</div><div style="height:5px;border-radius:3px;background:var(--s3);overflow:hidden"><div style="height:100%;width:${pct}%;background:${col}"></div></div><div style="display:flex;gap:6px"><button class="btn sm" onclick="openAddMaint('${m.id}')">Записать ТО</button>${m.techState==='ok'?`<button class="btn sm rd" onclick="setTechState('${m.id}','repair')">В ремонт</button>`:''}</div></div>`; }).join('')}</div></div>
+      <div class="card"><div class="card-h"><h3>История ремонтов и замен (удаление заблокировано)</h3><select class="sel" style="width:auto;min-width:180px" onchange="TO_FILT=this.value;render()"><option value="all" ${TO_FILT==='all'?'selected':''}>Все борта</option>${STATE.machines.map(m => `<option value="${m.id}" ${TO_FILT===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Дата</th><th>Борт</th><th class="r">Пробег / м/ч</th><th>Тип</th><th>Работы / узел</th>${isBoss()?'<th class="r">Сумма</th>':''}<th>Кто внёс</th></tr></thead><tbody class="num">${logs.map(l => { const car = STATE.machines.find(x => x.id === l.machineId) || { name:'№'+l.machineId }; return `<tr><td class="mono">${fmtD(l.date)}</td><td><b>${esc(car.name)}</b></td><td class="r mono">${f(l.odoKm)} км · ${f(l.mh||0)} м/ч</td><td><span class="status-chip ${l.type==='to'?'gr':'yl'}">${l.type==='to'?'ТО':'Ремонт'}</span></td><td style="white-space:normal;min-width:200px">${esc(l.work)}${l.photo?` <span class="fi-plate">📎 фото</span>`:''}</td>${isBoss()?`<td class="r"><b>${l.cost?f(l.cost)+' ₽':'—'}</b></td>`:''}<td style="color:var(--mu);font-size:11.5px">${esc(l.author||'Механик')}</td></tr>`; }).join('')}</tbody></table></div></div>`;
+  } else if (TAB === 'feed') {
+    const chNames = { bort:'Внутри БОРТ (без VPN)', max:'MAX-бот (РФ без VPN)', vk:'VK Мессенджер', tg:'Telegram-бот' };
+    root.innerHTML = `<div class="card"><div class="card-h"><div><h3>Быстрая отправка с телефона (1 тап, без VPN)</h3><div style="font-size:12px;color:var(--mu)">Канал уведомлений: <b style="color:var(--ac)">${chNames[STATE.notifyChannel]}</b></div></div><button class="btn sm" onclick="openSettingsModal()">Сменить канал</button></div><div class="cap-grid"><button class="cap-btn hi" onclick="openCaptureModal('odo')"><b>📷 Заступил на смену</b><span>Сфоткал одометр → пробег сам в базе</span></button><button class="cap-btn" onclick="openCaptureModal('scale')"><b>📷 Накладная с весовой</b><span>Сфоткал талон → тоннаж сам в рейсах</span></button><button class="cap-btn" onclick="openCaptureModal('defect')"><b>📷 Поломка / чек запчасти</b><span>Сфоткал узел → ушло директору и в ТО</span></button></div></div><div class="card"><div class="card-h"><h3>Живая лента смены (${STATE.feed.length})</h3><span style="font-size:12px;color:var(--mu)">Все фото, заступления, весовая и тревоги</span></div><div style="display:flex;flex-direction:column;gap:8px">${STATE.feed.map(it => `<div class="feed-item">${it.img ? `<img class="feed-thumb" src="${it.img}" />` : `<div class="feed-thumb">${esc(it.tag)}</div>`}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><div><span class="status-chip ${it.badge}" style="margin-right:6px">${esc(it.tag)}</span><b>${esc(it.who)}</b></div><span class="mono" style="font-size:11px;color:var(--mu)">${esc(it.time)}</span></div><div style="font-size:12.5px;color:var(--tx2);margin-top:4px">${esc(it.text)}</div></div></div>`).join('')}</div></div>`;
+  } else if (TAB === 'fin' && isBoss()) {
+    root.innerHTML = `<div class="card"><div class="card-h"><div><h3>Экономика по бортам (сутки + итог месяца)</h3><div style="font-size:12px;color:var(--mu)">ДТ ${STATE.diesel} ₽/л · сливы выделены отдельно от расхода на работу</div></div><button class="btn" onclick="exportCsv()">Выгрузить Excel</button></div><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Борт</th><th>Маршрут</th><th class="r">Выработка</th><th class="r">ДТ работа</th><th class="r">Слив ДТ</th><th class="r">Ремонт</th><th class="r">Чистыми (сут.)</th><th class="r">За месяц</th></tr></thead><tbody class="num">${all.map(({ m, c }) => `<tr style="cursor:pointer" onclick="selectCar('${m.id}')"><td><b>${esc(m.name)}</b></td><td style="color:var(--tx2)">${esc(c.rt.name.split('→')[0].trim())}</td><td class="r">${c.isExc?`${f(m.workH,1)} м/ч`:`${f(c.dayTons)} т (${m.trips} р.)`}</td><td class="r">−${f(c.workFuelRub)} ₽</td><td class="r" style="color:${m.slivL?'var(--rd)':'var(--mu)'};font-weight:700">${m.slivL?`−${f(c.slivRub)} ₽`:'0'}</td><td class="r" style="color:${c.todayRep?'var(--rd)':'var(--mu)'}">${c.todayRep?`−${f(c.todayRep)} ₽`:'0'}</td><td class="r" style="font-weight:700;color:${c.dayProfit>=0?'var(--gr)':'var(--rd)'}">${c.dayProfit>=0?'+':'−'}${f(Math.abs(c.dayProfit))} ₽</td><td class="r" style="font-weight:700;color:var(--gr)">+${f(m.monthProfit)} ₽</td></tr>`).join('')}</tbody></table></div></div>`;
   }
-}
-function tgAsk(k) {
-  let q='', a='';
-  if (k==='rt') { q = 'Итог по маршрутам'; a = STATE.routes.map(r => { const cars = STATE.machines.filter(m => m.routeId === r.id); return `— ${r.name}: ${cars.length} борт., ${f(cars.reduce((s,m)=>s+calc(m).tons,0))} т, +${f(cars.reduce((s,m)=>s+calc(m).rev,0))} ₽`; }).join('\n'); }
-  else if (k==='to') { q = 'Ближайшие ТО'; a = STATE.machines.map(m => ({ m, l: m.nextToKm - m.odoKm })).filter(x => x.l <= 3000).map(x => `— ${x.m.name} (${f(x.m.odoKm)} км): ${x.l<=0?`просрочка +${f(Math.abs(x.l))} км`:`через ${f(x.l)} км`}`).join('\n') || 'Ближайших ТО нет.'; }
-  else { q = 'Сливы топлива'; a = STATE.machines.filter(m => m.slivL > 0).map(m => `— ${m.name} (${m.driver}): −${m.slivL} л (−${f(m.slivL*STATE.diesel)} ₽)`).join('\n') || 'Сливов не зафиксировано.'; }
-  TG_EXTRA = `<div class="tg-q">${esc(q)}</div><div class="tg-bub num">${esc(a)}</div>`; render();
-}
-function exportCsv() {
-  const h = 'Борт;Госномер;Водитель;Маршрут;Рейсы;Тоннаж_т;Источник;Пробег_сут_км;Одометр_км;ДТ_л;Слив_л;Чистыми_руб';
-  const rows = [h].concat(STATE.machines.map(m => { const c = calc(m); return [m.name, m.plate, m.driver, c.rt.name, m.trips, c.tons, c.tonsSrc, m.dayKm, m.odoKm, c.totalFuelL, m.slivL, Math.round(c.profit)].join(';'); }));
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')], { type:'text/csv;charset=utf-8' })); a.download = 'bort_svodka.csv'; a.click(); toast('Excel-файл скачан');
 }
 render();
 </script>
